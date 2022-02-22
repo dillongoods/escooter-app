@@ -1,5 +1,7 @@
-from app import app
+from app import app, models
 
 @app.route('/')
 def index():
-    return 'Hello world'
+    roles = models.Role.query.all()
+    users = models.User.query.all()
+    return ' '.join([role.name for role in roles])
