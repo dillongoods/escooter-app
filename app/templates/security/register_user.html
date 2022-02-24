@@ -4,9 +4,36 @@
 <h1>Create Account</h1>
 <form action="{{ url_for_security('register') }}" method="post" name="register_user_form">
     <div class="mb-3">
+        {{ register_user_form.firstName.label }}
+        {{ register_user_form.firstName(class_='register_user_form-control') }}
+        {% for error in register_user_form.firstName.errors %}
+        <div class="alert alert-danger w-100" role="alert">
+            [{{ error }}]
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ register_user_form.lastName.label }}
+        {{ register_user_form.lastName(class_='register_user_form-control') }}
+        {% for error in register_user_form.lastName.errors %}
+        <div class="alert alert-danger w-100" role="alert">
+            [{{ error }}]
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
         {{ register_user_form.email.label }}
         {{ register_user_form.email(class_='register_user_form-control') }}
         {% for error in register_user_form.email.errors %}
+        <div class="alert alert-danger w-100" role="alert">
+            [{{ error }}]
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ register_user_form.dob.label }}
+        {{ register_user_form.dob(class_='register_user_form-control') }}
+        {% for error in register_user_form.dob.errors %}
         <div class="alert alert-danger w-100" role="alert">
             [{{ error }}]
         </div>

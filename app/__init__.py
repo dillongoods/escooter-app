@@ -16,22 +16,23 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from app import views, models
+from .forms import RegistrationForm
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, models.User, models.Role)
-security = Security(app, user_datastore)
+security = Security(app, user_datastore, register_form=RegistrationForm)
 
-# # Create a user to test with
-# @app.before_first_request
-# def create_user():
-#     db.create_all()
-#     user_datastore.create_role(name="manager")
-#     user_datastore.create_role(name="employee")
-#     user_datastore.create_role(name="customer")
+# Create a user to test with
+@app.before_first_request
+def create_user():
+    db.create_all()
+    user_datastore.create_role(name="manager")
+    user_datastore.create_role(name="employee")
+    user_datastore.create_role(name="customer")
 
-#     user_datastore.create_user(email='test@test.net', password='password', roles=['manager'])
-#     try:
-#         db.session.commit()
-#         return 
-#     except:
-#         db.session.rollback()
+    user_datastore.create_user(email='test@test.net', password='password', roles=['customer'])
+    try:
+        db.session.commit()
+        return 
+    except:
+        db.session.rollback()
