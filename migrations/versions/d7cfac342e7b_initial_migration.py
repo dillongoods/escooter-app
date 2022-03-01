@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 084270d9bad4
+Revision ID: d7cfac342e7b
 Revises: 
-Create Date: 2022-02-24 12:12:34.882282
+Create Date: 2022-03-01 02:03:14.035829
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '084270d9bad4'
+revision = 'd7cfac342e7b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,6 +34,8 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('roles',
+    sa.Column('permissions', sa.UnicodeText(), nullable=True),
+    sa.Column('update_datetime', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=True),
     sa.Column('description', sa.String(length=255), nullable=True),
@@ -41,7 +43,22 @@ def upgrade():
     sa.UniqueConstraint('name')
     )
     op.create_table('users',
+    sa.Column('confirmed_at', sa.DateTime(), nullable=True),
+    sa.Column('last_login_at', sa.DateTime(), nullable=True),
+    sa.Column('current_login_at', sa.DateTime(), nullable=True),
+    sa.Column('last_login_ip', sa.String(length=64), nullable=True),
+    sa.Column('current_login_ip', sa.String(length=64), nullable=True),
+    sa.Column('login_count', sa.Integer(), nullable=True),
+    sa.Column('tf_primary_method', sa.String(length=64), nullable=True),
+    sa.Column('tf_totp_secret', sa.String(length=255), nullable=True),
+    sa.Column('tf_phone_number', sa.String(length=128), nullable=True),
+    sa.Column('create_datetime', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
+    sa.Column('update_datetime', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
+    sa.Column('username', sa.String(length=255), nullable=True),
+    sa.Column('us_totp_secrets', sa.Text(), nullable=True),
+    sa.Column('us_phone_number', sa.String(length=128), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('fs_uniquifier', sa.String(length=255), nullable=True),
     sa.Column('first_name', sa.String(length=255), nullable=True),
     sa.Column('last_name', sa.String(length=255), nullable=True),
     sa.Column('email', sa.String(length=255), nullable=True),
@@ -51,9 +68,10 @@ def upgrade():
     sa.Column('loyal', sa.Boolean(), nullable=True),
     sa.Column('is_discount', sa.Boolean(), nullable=True),
     sa.Column('active', sa.Boolean(), nullable=True),
-    sa.Column('confirmed_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('fs_uniquifier'),
+    sa.UniqueConstraint('username')
     )
     op.create_table('roles_users',
     sa.Column('user_id', sa.Integer(), nullable=True),

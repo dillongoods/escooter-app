@@ -1,7 +1,7 @@
 from flask_wtf import Form
 from wtforms import IntegerField, DateField, StringField, SelectField
 from wtforms.validators import DataRequired
-from flask_security.forms import RegisterForm
+from flask_security import RegisterForm
 
 HIRE_CHOICES = [('1', '1 hr'), ('2', '4 hrs'), ('3', '1 day'), ('4', '1 week')]
 PRIORITY_CHOICES = [('1', 'low'), ('2', 'high')]
@@ -12,10 +12,9 @@ LOCATION_CHOICES = [('1', 'Trinity Centre'), ('2', 'Train Station'),
 
 
 class RegistrationForm(RegisterForm):
-    firstName = StringField('First name', validators=[DataRequired()])
-    lastName = StringField('Last name', validators=[DataRequired()])
-    dob = DateField('Date of Birth', validators=[DataRequired()])
-
+    firstName = StringField('First name')
+    lastName = StringField('Last name')
+    dob = DateField('Date of Birth')
 
 class StoreCardDetails(Form):
     id = StringField('id')

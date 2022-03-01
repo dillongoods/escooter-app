@@ -1,23 +1,24 @@
 from email.policy import default
 from app import db
-from flask_security import RoleMixin, UserMixin
+from flask_security.models import fsqla_v2 as fsqla
 
-roles_users = db.Table('roles_users',
-                       db.Column('user_id', db.Integer(),
-                                 db.ForeignKey('users.id')),
-                       db.Column('role_id', db.Integer(), db.ForeignKey('roles.id')))
+# roles_users = db.Table('roles_users',
+#                        db.Column('user_id', db.Integer(),
+#                                  db.ForeignKey('users.id')),
+#                        db.Column('role_id', db.Integer(), db.ForeignKey('roles.id')))
 
 
-class Role(db.Model, RoleMixin):
+class Role(db.Model, fsqla.FsRoleMixin):
     __tablename__ = 'roles'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255), nullable=True)
 
 
-class User(db.Model, UserMixin):
+class User(db.Model, fsqla.FsUserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer(), primary_key=True)
+    fs_uniquifier = db.Column(db.String(255), unique=True)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
@@ -27,8 +28,7 @@ class User(db.Model, UserMixin):
     loyal = db.Column(db.Boolean(), default=False)
     is_discount = db.Column(db.Boolean(), default=False)
     active = db.Column(db.Boolean(), default=False)
-    confirmed_at = db.Column(db.DateTime())
-    roles = db.relationship('Role', secondary=roles_users,
+    roles = db.relationship('Role', secondary='roles_users',
                             backref=db.backref('users', lazy='dynamic'))
 
 
