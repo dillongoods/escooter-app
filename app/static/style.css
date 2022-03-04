@@ -10,6 +10,7 @@ img.d-inline-block align-top {
 html,
 body {
   font-family: "Inter", sans-serif;
-  height: 100vh;
+  max-height: calc(100vh - 80px);
+  height: 100%;
   width: 100%;
 }
