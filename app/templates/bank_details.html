@@ -1,0 +1,32 @@
+{% extends "layouts/auth_layout.html" %}
+{% block content %}
+
+<!---name = db.Column(db.String(255))
+accountNo = db.Column(db.Integer())
+sortCode = db.Column(db.Integer())
+expiry = db.Column(db.Date())
+CVC = db.Column(db.Integer()) --->
+
+
+<h1>Register card details</h1>
+<form method="post" name="bankDetails">
+    {{ form.hidden_tag() }}
+
+    <label>Name on card:</label>
+    {{ form.name }}
+
+    <label>Account Number:</label>
+    {{ form.accountNo }}
+   
+    <label>Sort Code:</label>
+    {{ form.sortCode }}
+
+    <label>Expiry date:</label>
+    {{ form.expiry }}
+
+    <label>CVC:</label>
+    {{ form.cvc }}
+
+    <p><input type="submit" value="register card details"></p>
+</form>
+{% endblock %}

@@ -29,11 +29,12 @@ security = Security(app, user_datastore, register_form=RegistrationForm)
 # Create a user to test with
 @app.before_first_request
 def create_user():
+    db.create_all()
+
     if not user_datastore.find_role("manager"):
         user_datastore.create_role(name="manager")
         user_datastore.create_role(name="employee")
 
-    db.create_all()
     if not user_datastore.find_user(email="test@me.com"):
         user_datastore.create_user(email="test@me.com", password=hash_password("password"))
     db.session.commit()

@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<h1>My Account</h1>
+
+<h3>Id:</h3>
+<ul> 
+    <li>{{current_user.id}}</li> 
+</ul>
+<h3>Email:</h3>
+<ul> 
+    <li>{{current_user.email}}</li> 
+</ul>
+
+<h3>Card Details:</h3>
+<ul>
+    <!-- //if card details, display card details
+    //if no card details, link to card details form? -->
+
+    {% if card_details %}
+        <li>{{card_details.accountNo}}</li>
+        <li>{{card_details.sortCode}}</li>
+        <li>{{card_details.expiry}}</li>
+        <li>{{card_details.cvc}}</li>
+    {% else %}
+    It appears you don't have any card details stored.
+    <a href="/account/bank_details">link</a>
+    {% endif %}
+</ul>
+
+{% endblock %}

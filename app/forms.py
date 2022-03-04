@@ -1,5 +1,5 @@
-from flask_wtf import Form
-from wtforms import IntegerField, DateField, StringField, SelectField
+from flask_wtf import FlaskForm
+from wtforms import IntegerField, DateField, StringField, SelectField, PasswordField, HiddenField, validators
 from wtforms.validators import DataRequired
 from flask_security import RegisterForm
 
@@ -16,17 +16,16 @@ class RegistrationForm(RegisterForm):
     lastName = StringField('Last name')
     dob = DateField('Date of Birth')
 
-class StoreCardDetails(Form):
+class StoreCardDetailsForm(FlaskForm):
     id = StringField('id')
-    firstName = StringField('firstName', validators=[DataRequired()])
-    lastName = StringField('lastName', validators=[DataRequired()])
+    name = StringField('name', validators=[DataRequired()])
     accountNo = IntegerField('accountno', validators=[DataRequired()])
     sortCode = IntegerField('sortCode', validators=[DataRequired()])
     expiry = DateField('expiry', validators=[DataRequired()])
-    CVC = IntegerField('CVC', validators=[DataRequired()])
+    cvc = IntegerField('cvc', validators=[DataRequired()])
 
 
-class CreateBooking(Form):
+class CreateBookingForm(FlaskForm):
     id = StringField('id')
     scooterid = StringField('scooterid')
     hirePeriod = SelectField(
@@ -36,7 +35,7 @@ class CreateBooking(Form):
     dropOffLoc = SelectField(u'dropoff', choices=LOCATION_CHOICES)
 
 
-class Feedback(Form):
+class FeedbackForm(FlaskForm):
     id = StringField('id')
     rating = SelectField(u'rating', choices=RATING_CHOICES,
                          validators=[DataRequired()])

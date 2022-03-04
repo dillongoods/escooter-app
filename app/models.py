@@ -2,12 +2,6 @@ from email.policy import default
 from app import db
 from flask_security.models import fsqla_v2 as fsqla
 
-# roles_users = db.Table('roles_users',
-#                        db.Column('user_id', db.Integer(),
-#                                  db.ForeignKey('users.id')),
-#                        db.Column('role_id', db.Integer(), db.ForeignKey('roles.id')))
-
-
 class Role(db.Model, fsqla.FsRoleMixin):
     __tablename__ = 'roles'
     id = db.Column(db.Integer(), primary_key=True)
@@ -28,6 +22,7 @@ class User(db.Model, fsqla.FsUserMixin):
     loyal = db.Column(db.Boolean(), default=False)
     is_discount = db.Column(db.Boolean(), default=False)
     active = db.Column(db.Boolean(), default=False)
+    bank_details_id = db.Column(db.Integer(), db.ForeignKey('bank_details.id'))
     roles = db.relationship('Role', secondary='roles_users',
                             backref=db.backref('users', lazy='dynamic'))
 
@@ -78,4 +73,4 @@ class BankDetails(db.Model):
     accountNo = db.Column(db.Integer())
     sortCode = db.Column(db.Integer())
     expiry = db.Column(db.Date())
-    CVC = db.Column(db.Integer())
+    cvc = db.Column(db.Integer())
