@@ -1,67 +1,74 @@
-{% extends "layouts/auth_layout.html" %}
-{% block content %}
+{% extends "base/index.html" %} {% block content %}
 
-<h1>Create Account</h1>
-<form action="{{ url_for_security('register') }}" method="post" name="register_user_form">
-    {{ register_user_form.hidden_tag() }}
-    <div class="mb-3">
-        {{ register_user_form.firstName.label }}
-        {{ register_user_form.firstName(class_='register_user_form-control') }}
-        {% for error in register_user_form.firstName.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
-        </div>
+<div class="w-[392px] mx-auto flex flex-col h-full justify-center">
+  <span class="text-h6">Register</span>
+  <div class="drop-shadow-md bg-white rounded-xl mt-4 p-6">
+    <form
+      action="{{ url_for_security('register') }}"
+      method="post"
+      name="register_user_form"
+    >
+      {{ register_user_form.hidden_tag() }}
+      <div class="mb-3">
+        {{ register_user_form.firstName.label(class_="mb-2") }} {{
+        register_user_form.firstName(class_='mt-2 w-full p-3 rounded-lg border
+        border-black', placeholder_="First name") }} {% for error in
+        register_user_form.firstName.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ register_user_form.lastName.label }}
-        {{ register_user_form.lastName(class_='register_user_form-control') }}
-        {% for error in register_user_form.lastName.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
-        </div>
+      </div>
+      <div class="mb-3">
+        {{ register_user_form.lastName.label }} {{
+        register_user_form.lastName(class_='mt-2 w-full p-3 rounded-lg border
+        border-black', placeholder_="Last name") }} {% for error in
+        register_user_form.lastName.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ register_user_form.email.label }}
-        {{ register_user_form.email(class_='register_user_form-control') }}
-        {% for error in register_user_form.email.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
-        </div>
+      </div>
+      <div class="mb-3">
+        {{ register_user_form.email.label }} {{
+        register_user_form.email(class_='mt-2 w-full p-3 rounded-lg border
+        border-black', placeholder_="Email") }} {% for error in
+        register_user_form.email.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ register_user_form.dob.label }}
-        {{ register_user_form.dob(class_='register_user_form-control') }}
-        {% for error in register_user_form.dob.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
-        </div>
+      </div>
+      <div class="mb-3">
+        {{ register_user_form.dob.label }} {{
+        register_user_form.dob(class_='mt-2 w-full p-3 rounded-lg border
+        border-black', placeholder_="Date of birth") }} {% for error in
+        register_user_form.dob.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ register_user_form.password.label }}
-        {{ register_user_form.password(class_='register_user_form-control') }}
-        {% for error in register_user_form.password.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
-        </div>
+      </div>
+      <div class="mb-3">
+        {{ register_user_form.password.label }} {{
+        register_user_form.password(class_='mt-2 w-full p-3 rounded-lg border
+        border-black', placeholder_="Password") }} {% for error in
+        register_user_form.password.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ register_user_form.password_confirm.label }}
-        {{ register_user_form.password_confirm(class_='register_user_form-control') }}
-        {% for error in register_user_form.password_confirm.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
-        </div>
+      </div>
+      <div class="mb-3">
+        {{ register_user_form.password_confirm.label}} {{
+        register_user_form.password_confirm(class_='mt-2 w-full p-3 rounded-lg
+        border border-black', placeholder_="Repeat password") }} {% for error in
+        register_user_form.password_confirm.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
-    </div>
-    <p><input type="submit" class="btn btn-primary" value="Register"></p>
-
-</form>
-
-{% include "security/_menu.html" %}
-
+      </div>
+      <div class="w-full h-px bg-gray-200 my-8"></div>
+      <div class="w-full flex">
+        <a class="p-3 w-full text-h4 rounded-lg text-center" href="/"
+          >Go back</a
+        >
+        <input
+          type="submit"
+          class="w-full bg-green-600 text-white text-h4 py-2 rounded-lg cursor-pointer ml-4"
+          value="Register"
+        />
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

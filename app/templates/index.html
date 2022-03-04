@@ -1,25 +1,24 @@
-{% extends "layouts/base.html" %}
-{% block content %}
+{% extends "base/index.html" %} {% block content %}
 <h1>Home</h1>
 
 <h3>Users</h3>
 <ul>
-    {% for u in users %}
-    <li>{{u.email}}</li>
-    {% endfor %}
+  {% for u in users %}
+  <li>{{u.email}}</li>
+  {% endfor %}
 </ul>
 
 <h3>Roles</h3>
 <ul>
-    {% for r in roles %}
-    <li>{{r.name}}</li>
-    {% endfor %}
+  {% for r in roles %}
+  <li>{{r.name}}</li>
+  {% endfor %}
 </ul>
 
 <h3>Bank Details</h3>
 <ul>
-    {% for d in bank_details %}
-    <li>{{d.name}}</li>
-    {% endfor %}
+  {% for d in bank_details %}
+  <li>{{d.name}}</li>
+  {% endfor %}
 </ul>
 {% endblock %}

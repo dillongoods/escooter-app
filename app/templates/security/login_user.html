@@ -1,40 +1,53 @@
-{% extends "layouts/auth_layout.html" %}
-{% block content %}
-
-<h1>Login</h1>
-<form action="{{ url_for_security('login') }}" method="post" name="login_user_form">
-    {{ login_user_form.hidden_tag() }}
-    <div class="mb-3">
-        {{ login_user_form.email.label }}
-        {{ login_user_form.email(class_='login_user_form-control') }}
-        {% for error in login_user_form.email.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
+{% extends "base/index.html" %} {% block content %}
+<div class="w-full h-full flex justify-between items-center">
+  <div>
+    <h1 class="text-h9 mb-2">Scooterz</h1>
+    <span class="text-body-xl text-gray-700"
+      >Easily rentable scooters all around your city</span
+    >
+    <div class="w-[392px]">
+      <div class="w-full h-px bg-gray-200 my-10"></div>
+      <span class="text-h6">Login</span>
+      <form
+        action="{{ url_for_security('login') }}"
+        method="post"
+        name="login_user_form"
+        class="mt-6"
+      >
+        {{ login_user_form.hidden_tag() }}
+        <div class="mb-6">
+          {{ login_user_form.email(class_='w-full p-3 rounded-lg border
+          border-black', placeholder_="Email") }} {% for error in
+          login_user_form.email.errors %}
+          <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+          {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ login_user_form.password.label }}
-        {{ login_user_form.password(class_='login_user_form-control') }}
-        {% for error in login_user_form.password.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
+        <div class="mb-6">
+          {{ login_user_form.password(class_='w-full p-3 rounded-lg border
+          border-black', placeholder_="Password") }} {% for error in
+          login_user_form.password.errors %}
+          <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+          {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-    <div class="mb-3">
-        {{ login_user_form.remember.label }}
-        {{ login_user_form.remember(class_='login_user_form-control') }}
-        {% for error in login_user_form.remember.errors %}
-        <div class="alert alert-danger w-100" role="alert">
-            [{{ error }}]
+        <div class="flex justify-end items-center">
+          {{ login_user_form.remember.label(class_='mr-2') }} {{
+          login_user_form.remember(class_='h-4 w-4') }} {% for error in
+          login_user_form.remember.errors %}
+          <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+          {% endfor %}
         </div>
-        {% endfor %}
+        <div class="w-full flex mt-6">
+          {% include "security/_menu.html" %}
+          <input
+            type="submit"
+            class="w-full bg-green-600 text-white text-h4 py-2 rounded-lg cursor-pointer ml-4"
+            value="Login"
+          />
+        </div>
+      </form>
     </div>
-    <p><input type="submit" class="btn btn-primary" value="Login"></p>
-
-</form>
-
-{% include "security/_menu.html" %}
+  </div>
+  <img src="{{url_for('static', filename='home_image.png')}}" />
+</div>
 
 {% endblock %}

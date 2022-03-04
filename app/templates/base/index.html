@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html style="max-height: calc(100vh - 80px); height: 100%">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" media="screen" type="text/css" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <title>Scooterz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        @variants responsive {
+          .text-h9 {
+            font-weight: 600;
+            font-size: 4rem;
+            line-height: 4.5rem;
+          }
+
+          .text-h8 {
+            font-weight: 600;
+            font-size: 3rem;
+            line-height: 4rem;
+          }
+
+          .text-h7 {
+            font-weight: 600;
+            font-size: 2.5rem;
+            line-height: 3rem;
+          }
+
+          .text-h6 {
+            font-weight: 600;
+            font-size: 2rem;
+            line-height: 2.5rem;
+          }
+
+          .text-h5 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            line-height: 2rem;
+          }
+
+          .text-h4 {
+            font-weight: 600;
+            font-size: 1.25rem;
+            line-height: 2rem;
+          }
+
+          .text-h3 {
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.5rem;
+          }
+
+          .text-h2 {
+            font-weight: 600;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+          }
+
+          .text-h1 {
+            font-weight: 600;
+            font-size: 0.75rem;
+            line-height: 1rem;
+          }
+
+          .text-title-mobile {
+            font-weight: 600;
+            font-size: 2.125rem;
+            line-height: 2.5rem;
+          }
+
+          .text-subtitle {
+            font-weight: 400;
+            font-size: 1.25rem;
+            line-height: 2rem;
+          }
+
+          .text-body-xl {
+            font-weight: 400;
+            font-size: 1.5rem;
+            line-height: 1.5rem;
+          }
+
+          .text-body-lg {
+            font-weight: 400;
+            font-size: 1rem;
+            line-height: 1.5rem;
+          }
+
+          .text-body-md {
+            font-weight: 400;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+          }
+
+          .text-body-md-bold {
+            font-weight: 700;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+          }
+
+          .text-body-sm {
+            font-weight: 400;
+            font-size: 0.75rem;
+            line-height: 1rem;
+          }
+
+          .logo-mobile {
+            width: 6.75rem;
+            height: 1.25rem;
+          }
+
+          .position-cursor {
+            left: 29.17%;
+            right: 20%;
+            top: 25%;
+            bottom: 15%;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body class="h-full">
+    <div class="px-32 items-center bg-orange-500 h-20 flex justify-between">
+      <a class="text-white flex items-center text-h5" href="/">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 28 28"
+          fill="none"
+          class="pr-2"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="14" cy="14" r="13" stroke="white" stroke-width="2" />
+          <path
+            d="M11.9 8.04999L9.45004 16.8C9.80004 16.9167 10.5 17.36 10.5 18.2H18.2C18.2 17.7333 18.48 16.8 19.6 16.8"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <circle cx="19.95" cy="18.55" r="1.75" fill="white" />
+          <circle cx="8.75" cy="18.55" r="1.75" fill="white" />
+          <circle cx="11.55" cy="8.05" r="1.05" fill="white" />
+        </svg>
+
+        Scooterz</a
+      >
+      <div>
+        <!-- <a class="nav-link" href="/login">Login</a> -->
+      </div>
+    </div>
+
+    <div class="h-full lg:mx-20 xl:mx-40">
+      {% block content %}{% endblock %}
+    </div>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='ajax_js.js') }}"
+    ></script>
+  </body>
+</html>

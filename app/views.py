@@ -23,12 +23,10 @@ def page_not_found(e):
 
 @app.route('/')
 def index():
-    # return render_template_auth('index.html')
-
-    roles = models.Role.query.all()
-    users = models.User.query.all()
-    bank_details = models.BankDetails.query.all()
-    return render_template_auth('index.html', roles=roles, users=users, bank_details=bank_details)
+    if current_user:
+        return render_template_auth('index.html')
+        
+    return redirect('/login')
 
 # @app.route('/')
 # def index():
