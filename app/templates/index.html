@@ -1,5 +1,11 @@
-{% extends "base/index.html" %} {% block content %}
-<h1>Home</h1>
+{% import 'components/hireForm.html' as hireForm %}{% extends "base/index.html"
+%} {% block content %}
+<div class="w-full mx-auto flex flex-col h-full justify-center">
+  {{hireForm.hireForm(form)}}
+</div>
+{% endblock %}
+
+<!-- <h1>Home</h1>
 
 <h3>Users</h3>
 <ul>
@@ -20,5 +26,4 @@
   {% for d in bank_details %}
   <li>{{d.name}}</li>
   {% endfor %}
-</ul>
-{% endblock %}
+</ul> -->

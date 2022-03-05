@@ -1,32 +1,58 @@
-{% extends "layouts/auth_layout.html" %}
-{% block content %}
+{% extends "base/index.html" %} {% block content %}
 
-<!---name = db.Column(db.String(255))
-accountNo = db.Column(db.Integer())
-sortCode = db.Column(db.Integer())
-expiry = db.Column(db.Date())
-CVC = db.Column(db.Integer()) --->
+<div class="w-[392px] mx-auto flex flex-col h-full justify-center">
+  <span class="text-h6">Add card details</span>
+  <div class="drop-shadow-md bg-white rounded-xl mt-4 p-6">
+    <form action="" method="post" name="bankDetails">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        <label class="mb-2">Name on card</label> {{ form.name(class_='mt-2
+        w-full p-3 rounded-lg border border-black', placeholder_="Name") }} {%
+        for error in form.name.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        <label class="mb-2">Account number</label> {{
+        form.accountNo(class_='mt-2 w-full p-3 rounded-lg border border-black',
+        placeholder_="Number") }} {% for error in form.accountNo.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        <label class="mb-2">Sort code</label> {{ form.sortCode(class_='mt-2
+        w-full p-3 rounded-lg border border-black', placeholder_="Code") }} {%
+        for error in form.sortCode.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        <label class="mb-2">Expiry date</label> {{ form.expiry(class_='mt-2
+        w-full p-3 rounded-lg border border-black', placeholder_="Date") }} {%
+        for error in form.expiry.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        <label class="mb-2">CVC</label> {{ form.cvc(class_='mt-2 w-full p-3
+        rounded-lg border border-black', placeholder_="Date") }} {% for error in
+        form.cvc.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+        {% endfor %}
+      </div>
 
-
-<h1>Register card details</h1>
-<form method="post" name="bankDetails">
-    {{ form.hidden_tag() }}
-
-    <label>Name on card:</label>
-    {{ form.name }}
-
-    <label>Account Number:</label>
-    {{ form.accountNo }}
-   
-    <label>Sort Code:</label>
-    {{ form.sortCode }}
-
-    <label>Expiry date:</label>
-    {{ form.expiry }}
-
-    <label>CVC:</label>
-    {{ form.cvc }}
-
-    <p><input type="submit" value="register card details"></p>
-</form>
+      <div class="w-full h-px bg-gray-200 my-8"></div>
+      <div class="w-full flex">
+        <a class="p-3 w-full text-h4 rounded-lg text-center" href="/account"
+          >Go back</a
+        >
+        <input
+          type="submit"
+          class="w-full bg-green-600 text-white text-h4 py-2 rounded-lg cursor-pointer ml-4"
+          value="Add"
+        />
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

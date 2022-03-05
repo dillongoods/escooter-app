@@ -28,11 +28,12 @@ class StoreCardDetailsForm(FlaskForm):
 class CreateBookingForm(FlaskForm):
     id = StringField('id')
     scooterid = StringField('scooterid')
+    cost = IntegerField('cost')
     hirePeriod = SelectField(
-        u'period', choices=HIRE_CHOICES, validators=[DataRequired()])
+        u'Hire period', choices=HIRE_CHOICES, validators=[DataRequired()])
     pickupLoc = SelectField(
-        u'pickup', choices=LOCATION_CHOICES, validators=[DataRequired()])
-    dropOffLoc = SelectField(u'dropoff', choices=LOCATION_CHOICES)
+        u'Pickup location', choices=LOCATION_CHOICES, validators=[DataRequired()])
+    dropOffLoc = SelectField(u'Dropoff location', choices=LOCATION_CHOICES)
 
 
 class FeedbackForm(FlaskForm):

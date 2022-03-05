@@ -1,9 +1,17 @@
-from flask import session, render_template, request, redirect
+from flask import session, render_template, request, redirect, flash
 from app import app, models, db
-from flask_security import login_required, current_user
-from .forms import StoreCardDetailsForm
+from flask_security import login_required, current_user, logout_user
+from .forms import StoreCardDetailsForm, CreateBookingForm
 import datetime
+from flask_mail import Mail, Message
 
+app.config['MAIL_SERVER']='smtp.mailtrap.io'
+app.config['MAIL_PORT'] = 2525
+app.config['MAIL_USERNAME'] = '97e041d5e367c7'
+app.config['MAIL_PASSWORD'] = 'cfaf5b99f8bafb'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+mail = Mail(app)
 
 # Wrapper for render_template to always include whether user is authenticated
 
@@ -20,12 +28,28 @@ def render_template_auth(template, **template_vars):
 def page_not_found(e):
     return render_template_auth('not_found.html')
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/login')
 
-@app.route('/')
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    if current_user:
-        return render_template_auth('index.html')
-        
+    if current_user.is_authenticated:
+        form = CreateBookingForm()
+
+        if form.validate_on_submit():
+            # HIRING SCOOTER LOGIC
+
+            # EMAIL SENDING
+            msg = Message('Booking confirmation', sender = 'scooterz@mailtrap.io', recipients = [current_user.email])
+            msg.body = "Hey Paul, sending you this email from my Flask app, lmk if it works"
+            mail.send(msg)
+            return render_template_auth('index.html', form=form)
+
+        return render_template_auth('index.html', form=form)
+
     return redirect('/login')
 
 # @app.route('/')
@@ -42,9 +66,9 @@ def my_account():
 
     #for users to view their account details
     
-    user_id = current_user.id
+    user_email = current_user.email
 
-    user = models.User.query.filter_by(id=user_id).first()
+    user = models.User.query.filter_by(email=user_email).first()
     details = models.BankDetails.query.filter_by(id=user.bank_details_id).first()
     
     # details = {
@@ -56,7 +80,7 @@ def my_account():
     #     "cvc":666,
     # }
 
-    return render_template_auth('my_account.html', title = 'My Account', email=current_user.email, card_details=details)
+    return render_template_auth('my_account.html', title = 'My Account', user=user, card_details=details)
 
 @app.route('/account/bank_details', methods=['GET', 'POST'])
 def bank_details():
