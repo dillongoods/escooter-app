@@ -1,6 +1,16 @@
 from email.policy import default
 from app import db
 from flask_security.models import fsqla_v2 as fsqla
+from sqlalchemy.inspection import inspect
+
+class Serializer(object):
+
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
 
 class Role(db.Model, fsqla.FsRoleMixin):
     __tablename__ = 'roles'
@@ -49,18 +59,19 @@ class Scooter(db.Model):
                             db.ForeignKey('locations.id'))
 
 
-class Location(db.Model):
+class Location(db.Model, Serializer):
     __tablename__ = 'locations'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(255))
-    coordinates = db.Column(db.String(255))
+    x_cord = db.Column(db.String(255))
+    y_cord = db.Column(db.String(255))
 
 
 class Review(db.Model):
     __tablename__ = 'reviews'
     id = db.Column(db.Integer(), primary_key=True)
     booking_id = db.Column('booking_id', db.Integer(),
-                           db.ForeignKey('bookings.id'))
+            db.ForeignKey('bookings.id'))
     rating = db.Column(db.Integer())
     message = db.Column(db.String(1000))
     priority = db.Column(db.Integer())

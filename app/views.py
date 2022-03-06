@@ -1,21 +1,18 @@
-from flask import session, render_template, request, redirect, flash
+from flask import session, render_template, request, redirect, flash, json
 from app import app, models, db
 from flask_security import login_required, current_user, logout_user
-from .forms import StoreCardDetailsForm, CreateBookingForm
+from .forms import StoreCardDetailsForm, CreateBookingForm, LocationForm
+# from flask_googlemaps import GoogleMaps, Map
 import datetime
-from flask_mail import Mail, Message
 
-app.config['MAIL_SERVER']='smtp.mailtrap.io'
-app.config['MAIL_PORT'] = 2525
-app.config['MAIL_USERNAME'] = '97e041d5e367c7'
-app.config['MAIL_PASSWORD'] = 'cfaf5b99f8bafb'
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-mail = Mail(app)
+# Google Maps
+# app.config['GOOGLEMAPS_KEY'] = "AIzaSyAGIOSFvvdnHopfkR2wYQ9NJK5ZMk1fafQ"
+# GoogleMaps(app)
+
+
+MANAGER_EMAIL = 'adminadmin321@gmail.com'
 
 # Wrapper for render_template to always include whether user is authenticated
-
-
 def render_template_auth(template, **template_vars):
     return render_template(
         template,
@@ -23,32 +20,32 @@ def render_template_auth(template, **template_vars):
         **template_vars
     )
 
+# Manager route
+def checkAndRedirectManager():
+    if current_user.email == MANAGER_EMAIL:
+        return redirect('/manager')
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template_auth('not_found.html')
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect('/login')
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if current_user.email == MANAGER_EMAIL:
+        return redirect('/manager')
+
     if current_user.is_authenticated:
-        form = CreateBookingForm()
+        # form = CreateBookingForm()
 
-        if form.validate_on_submit():
-            # HIRING SCOOTER LOGIC
+        # if form.validate_on_submit():
+        #     # HIRING SCOOTER LOGIC
 
-            # EMAIL SENDING
-            msg = Message('Booking confirmation', sender = 'scooterz@mailtrap.io', recipients = [current_user.email])
-            msg.body = "Hey Paul, sending you this email from my Flask app, lmk if it works"
-            mail.send(msg)
-            return render_template_auth('index.html', form=form)
+        #     # EMAIL SENDING
+           
+        return render_template_auth('index.html')
 
-        return render_template_auth('index.html', form=form)
+        # return render_template_auth('index.html', form=allLocations)
 
     return redirect('/login')
 
@@ -118,3 +115,44 @@ def bank_details():
         #     db.session.commit()
  
     return render_template_auth('bank_details.html', title = 'My Account', form=details_form)
+
+# Manager Page
+@app.route('/manager')
+def manager():
+    allLocations = models.Location.query.all()
+
+    return render_template_auth('manager/index.html', locations=allLocations)
+
+@app.route('/manager/add-location', methods=['GET', 'POST'])
+def managerAddLocation():
+    form = LocationForm()
+
+    if form.validate_on_submit():
+        newLocation = models.Location(
+            name = form.name.data,
+            x_cord = form.x_cord.data,
+            y_cord = form.y_cord.data
+        )
+
+        db.session.add(newLocation)
+        db.session.commit()
+
+        return redirect('/manager')
+
+
+    return render_template_auth('manager/addLocation.html', form=form, map=map)
+
+
+# Logout
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/login')
+
+# API
+
+@app.route('/api/getLocations')
+def getLocations():
+    allLocations = models.Location.query.all()
+    
+    return json.jsonify({'locations': models.Location.serialize_list(allLocations)})

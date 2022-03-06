@@ -1,0 +1,80 @@
+{% extends "base/index.html" %} {% block content %}
+
+<div class="w-[592px] mx-auto flex flex-col h-full justify-center">
+  <span class="text-h6">Add location</span>
+  <div class="drop-shadow-md bg-white rounded-xl mt-4 p-6">
+    <form action="" method="post" name="addLocation">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.name.label(class_="mb-2 capitalize") }} {{
+        form.name(class_='mt-2 w-full p-3 rounded-lg border border-black',
+        placeholder_="Location name") }} {% for error in form.name.errors %}
+        <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
+        {% endfor %}
+      </div>
+      <div class="hidden">
+        {{ form.x_cord.label }} {{ form.x_cord(class_='mt-2 w-full p-3
+        rounded-lg border border-black', placeholder_="X coordinate",
+        id_="x_cord") }} {{ form.y_cord.label }} {{ form.y_cord(class_='mt-2
+        w-full p-3 rounded-lg border border-black', placeholder_="X coordinate",
+        id_="y_cord") }}
+      </div>
+      <span>Location</span>
+      <div id="addLocation" class="rounded-xl border border-black mt-2"></div>
+      <div class="w-full h-px bg-gray-200 my-8"></div>
+      <div class="w-full flex">
+        <a class="p-3 w-full text-h4 rounded-lg text-center" href="/"
+          >Go back</a
+        >
+        <input
+          type="submit"
+          class="w-full bg-green-600 text-white text-h4 py-2 rounded-lg cursor-pointer ml-4 disabled:bg-gray-300"
+          value="Add"
+          id="submitButton"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  function initMap() {
+    const submitButton = document.getElementById("submitButton");
+    submitButton.disabled = true;
+
+    const center = { lat: 53.8060835, lng: -1.6057715 };
+
+    const addLocationMap = document.getElementById("addLocation");
+
+    const map = new google.maps.Map(addLocationMap, {
+      zoom: 12,
+      center: center,
+    });
+
+    const initialMarker = new google.maps.Marker({
+      position: undefined,
+      map: map,
+    });
+
+    const xCord = document.getElementById("x_cord");
+    const yCord = document.getElementById("y_cord");
+
+    google.maps.event.addListener(
+      map,
+      "click",
+      function ({ latLng: { lat, lng } }) {
+        const newLat = lat();
+        const newLng = lng();
+
+        var latlng = new google.maps.LatLng(newLat, newLng);
+
+        initialMarker.setPosition(latlng);
+
+        submitButton.disabled = false;
+
+        yCord.value = newLat;
+        xCord.value = newLng;
+      }
+    );
+  }
+</script>
+{% endblock %}

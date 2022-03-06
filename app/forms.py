@@ -43,3 +43,9 @@ class FeedbackForm(FlaskForm):
     message = StringField('message', validators=[DataRequired()])
     priority = SelectField(
         'priority', choices=PRIORITY_CHOICES, validators=[DataRequired()])
+
+class LocationForm(FlaskForm):
+    id = StringField('id')
+    name = StringField('name',  validators=[DataRequired()])
+    x_cord = StringField('x_cord',  validators=[DataRequired()])
+    y_cord = StringField('y_cord',  validators=[DataRequired()])

@@ -14,3 +14,9 @@ body {
   height: 100%;
   width: 100%;
 }
+
+#addLocation {
+  height: 300px;
+  width: 100%;
+  background-color: grey;
+}
