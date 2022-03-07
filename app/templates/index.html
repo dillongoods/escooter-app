@@ -17,8 +17,11 @@
       <div class="p-6 py-4 border-b border-b-black">
         <span class="text-h4">Scooters</span>
       </div>
-      <div class="flex-1 flex justify-center items-center">
-        <span class="text-body-lg text-gray-600"
+      <div
+        class="flex-1 flex justify-center items-center"
+        id="scooterContainer"
+      >
+        <span class="text-body-lg text-gray-600 text-center"
           >Please select one of pickup spots.</span
         >
       </div>
@@ -26,21 +29,41 @@
   </div>
 </div>
 <script>
+  function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+  }
+
+  function appendEmptyText(parent) {
+    const span = document.createElement("span");
+    span.innerHTML = "There are no available scooters in this location";
+
+    span.className = "text-body-lg text-gray-600 text-center";
+    parent.appendChild(span);
+  }
+
   function initMap() {
+    const scooterContainer = document.getElementById("scooterContainer");
+
     const center = { lat: 53.8001179, lng: -1.5485432 };
 
     const addLocationMap = document.getElementById("hireMap");
 
+    // Create a map and display it
     const map = new google.maps.Map(addLocationMap, {
       zoom: 14,
       center: center,
     });
 
+    // Get all scooter locations
     $.ajax({
       url: "/api/getLocations",
     }).done(function (res) {
+      // Go over locations and create markers
       res.locations.map((location) => {
-        new google.maps.Marker({
+        // Create a marker for that location
+        const marker = new google.maps.Marker({
           position: {
             lat: Number(location.y_cord),
             lng: Number(location.x_cord),
@@ -49,6 +72,20 @@
           title: location.name,
           icon: "static/favicon.ico",
         });
+
+        // add a listener to the marker so that when the marker is clicked, we fetch all scooters in that location
+        marker.addListener("click", (e) => {
+          $.ajax({
+            url: `/api/getScooters?location=${marker.title}`,
+          }).done(function ({ scooters }) {
+            // remove everything in scooter container div
+            removeAllChildNodes(scooterContainer);
+
+            if (!scooters.length) {
+              appendEmptyText(scooterContainer);
+            }
+          });
+        });
       });
     });
   }
@@ -56,26 +93,3 @@
 {% endblock %}
 
 <!-- {{hireForm.hireForm(form)}} -->
-
-<!-- <h1>Home</h1>
-
-<h3>Users</h3>
-<ul>
-  {% for u in users %}
-  <li>{{u.email}}</li>
-  {% endfor %}
-</ul>
-
-<h3>Roles</h3>
-<ul>
-  {% for r in roles %}
-  <li>{{r.name}}</li>
-  {% endfor %}
-</ul>
-
-<h3>Bank Details</h3>
-<ul>
-  {% for d in bank_details %}
-  <li>{{d.name}}</li>
-  {% endfor %}
-</ul> -->

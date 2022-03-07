@@ -149,10 +149,22 @@ def logout():
     logout_user()
     return redirect('/login')
 
-# API
+# API ---------------------------------------
 
+# Get all locations
 @app.route('/api/getLocations')
 def getLocations():
     allLocations = models.Location.query.all()
     
     return json.jsonify({'locations': models.Location.serialize_list(allLocations)})
+
+# Get all scooters in a specific location
+@app.route('/api/getScooters')
+def getScootersInLocation():
+    locationName = request.args.get('location')
+
+    location = models.Location.query.filter_by(name=locationName).first()
+
+    scootersInLocation = models.Scooter.query.filter_by(location_id=location.id, availability=True).all()
+
+    return json.jsonify({'scooters': models.Scooter.serialize_list(scootersInLocation)})
