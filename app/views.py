@@ -120,8 +120,10 @@ def bank_details():
 @app.route('/manager')
 def manager():
     allLocations = models.Location.query.all()
+    
+    allScooters = models.Scooter.query.all()
 
-    return render_template_auth('manager/index.html', locations=allLocations)
+    return render_template_auth('manager/index.html', locations=allLocations, Scooters=allScooters)
 
 @app.route('/manager/add-location', methods=['GET', 'POST'])
 def managerAddLocation():
@@ -156,3 +158,10 @@ def getLocations():
     allLocations = models.Location.query.all()
     
     return json.jsonify({'locations': models.Location.serialize_list(allLocations)})
+
+@app.route('/api/getScooters')
+def getScooters():
+    
+    allScooters = models.Scooter.query.all()
+    
+    return json.jsonify({'scooters', models.Scooter.serialize_list(allScooters)})
