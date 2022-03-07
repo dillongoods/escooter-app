@@ -8,9 +8,16 @@
         >It appears there are no scooters yet. You can add them now</span
       >
       {% else %} {% for scooter in Scooters %}
-      <div class="mb-3 py-2">
-        <h1>scooter</h1>
-        <span>{{scooter.availability}}</span>
+      <div  class="mb-3 py-2">
+      <img class="h-16 w-16 object-cover float-left p-4" src="static/favicon.ico" alt="small scooter icon">
+        <span>Scooter ID: {{scooter.id}}</span><br>
+       <p class="flex justify-between"> 
+       {% if scooter.availability == True %}
+           <span class="text-green-600">Available: Yes 	&#10003;</span>
+       {% else %}
+            <span class="text-red-600">Available: No &#10007;</span>
+        {% endif %}
+        <span>Location: {{scooter.location_id}}</span></p>
       </div>
       {% endfor %} {% endif %}
     </div>

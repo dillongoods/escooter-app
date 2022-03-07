@@ -167,7 +167,7 @@ def getScootersInLocation():
 
     location = models.Location.query.filter_by(name=locationName).first()
 
-    scootersInLocation = models.Scooter.query.filter_by(location_id=location.id, availability=True).all()
+    scootersInLocation = models.Scooter.query.filter_by(location_id=location, availability=True).all()
 
     return json.jsonify({'scooters': models.Scooter.serialize_list(scootersInLocation)})
 

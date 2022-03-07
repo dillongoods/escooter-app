@@ -6,5 +6,5 @@ save_non_project_files = False
 
 [main]
 version = 0.2.0
-recent_files = ['app\\views.py', 'app\\__init__.py', 'app\\templates\\base\\index.html', 'app\\templates\\security\\_menu.html', 'app\\templates\\my_account.html', 'app\\templates\\not_found.html', 'app\\templates\\layouts\\auth_layout.html', 'app\\models.py']
+recent_files = ['app/views.py', 'app/templates/manager/index.html', 'app/templates/bank_details.html', 'app/templates/security/_menu.html', 'app/templates/base/index.html', 'app/templates/index.html']
 
