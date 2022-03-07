@@ -14,8 +14,17 @@
     <div
       class="flex flex-col h-full ml-6 border-black border rounded-tr-lg rounded-br-lg w-1/3"
     >
-      <div class="p-6 py-4 border-b border-b-black">
-        <span class="text-h4">Scooters</span>
+      <div class="p-6 py-4 border-b border-b-black flex flex-col">
+        <div class="flex justify-between items-center">
+          <span class="text-h4 mr-4">Scooters</span>
+          <span
+            class="text-body-lg text-gray-600 !font-regular truncate"
+            id="locationName"
+          ></span>
+        </div>
+        <span class="mt-1 text-body-md text-gray-600"
+          >Click on a scooter to start your order.</span
+        >
       </div>
       <div
         class="flex-1 flex justify-center items-center"
@@ -53,6 +62,7 @@
   // initializes map with markers and their functionality
   function initMap() {
     const scooterContainer = document.getElementById("scooterContainer");
+    const locationNameSpan = document.getElementById("locationName");
 
     const center = { lat: 53.8001179, lng: -1.5485432 };
 
@@ -86,12 +96,36 @@
           $.ajax({
             url: `/api/getScooters?location=${marker.title}`,
           }).done(function ({ scooters }) {
+            locationNameSpan.innerHTML = marker.title;
             // remove everything in scooter container div
             removeAllChildNodes(scooterContainer);
 
             if (!scooters.length) {
-              appendEmptyText(scooterContainer);
+              scooterContainer.className =
+                "flex-1 flex justify-center items-center";
+              return appendEmptyText(scooterContainer);
             }
+
+            // Add scooter divs to the container
+            scooters.map((scooter) => {
+              const scooterDiv = document.createElement("div");
+              const scooterTitleSpan = document.createElement("span");
+              const scooterImage = document.createElement("img");
+
+              scooterImage.src = "static/favicon.ico";
+              scooterImage.className = "w-9 h-9 mr-2";
+
+              scooterTitleSpan.innerHTML = `Scooter ${scooter.id}`;
+              scooterTitleSpan.className = "text-h3";
+
+              scooterDiv.className =
+                "px-6 py-4 border-b border-black w-full flex items-center";
+              scooterDiv.appendChild(scooterImage);
+              scooterDiv.appendChild(scooterTitleSpan);
+
+              scooterContainer.className = "flex-1 flex flex-col justify-start";
+              scooterContainer.appendChild(scooterDiv);
+            });
           });
         });
       });

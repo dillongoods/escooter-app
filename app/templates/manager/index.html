@@ -3,18 +3,17 @@
   <div class="flex-1">
     <span class="text-h6">Scooters</span>
     <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
-     {% if Scooters|length == 0 %}
-        <span class="text-center text-body-lg text-gray-500 my-8"
-          >It appears there are no scooters yet. You can add them now</span
-        >
-        {% else %} {% for scooter in Scooters %}
-        <div class="mb-3 py-2">
-        <h1> scooter </h1>
-          <span>{{scooter.availability}}</span>
-        </div>
-        {% endfor %} {% endif %}
+      {% if Scooters|length == 0 %}
+      <span class="text-center text-body-lg text-gray-500 my-8"
+        >It appears there are no scooters yet. You can add them now</span
+      >
+      {% else %} {% for scooter in Scooters %}
+      <div class="mb-3 py-2">
+        <h1>scooter</h1>
+        <span>{{scooter.availability}}</span>
+      </div>
+      {% endfor %} {% endif %}
     </div>
-    
   </div>
   <div class="flex-1">
     <span class="text-h6">Locations</span>
@@ -25,8 +24,13 @@
           >It appears there are no locations yet. You can add them now</span
         >
         {% else %} {% for location in locations %}
-        <div class="mb-3 py-2">
+        <div class="mb-3 py-2 flex justify-between">
           <span>{{location.name}}</span>
+          <span
+            id="{{location.id}}"
+            class="addButton cursor-pointer text-green-600"
+            >Add scooter</span
+          >
         </div>
         {% endfor %} {% endif %}
         <div class="w-full h-px bg-gray-100 mb-6"></div>
@@ -39,4 +43,18 @@
     </div>
   </div>
 </div>
+<script>
+  const allButtons = document.getElementsByClassName("addButton");
+  const arr = Array.prototype.slice.call(allButtons);
+
+  arr.map((button) => {
+    button.addEventListener("click", function (e) {
+      $.ajax({
+        url: `/api/addScooter?locationId=${button.id}`,
+      }).done(function () {
+        console.log("Scooter added!");
+      });
+    });
+  });
+</script>
 {% endblock %}

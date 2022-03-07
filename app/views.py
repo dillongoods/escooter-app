@@ -170,3 +170,18 @@ def getScootersInLocation():
     scootersInLocation = models.Scooter.query.filter_by(location_id=location.id, availability=True).all()
 
     return json.jsonify({'scooters': models.Scooter.serialize_list(scootersInLocation)})
+
+# Add a scooter to the location
+@app.route('/api/addScooter')
+def addScooterToLocation():
+    locationId = request.args.get('locationId')
+
+    newScooter = models.Scooter(
+        location_id = locationId
+    )
+
+    db.session.add(newScooter)
+    db.session.commit()
+
+    return '200'
+
