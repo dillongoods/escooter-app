@@ -29,20 +29,28 @@
   </div>
 </div>
 <script>
+  // function to remove all divs child nodes
   function removeAllChildNodes(parent) {
+    // loop works while there is a first child
     while (parent.firstChild) {
+      // removes that child from the parent div
       parent.removeChild(parent.firstChild);
     }
   }
 
+  // appends explanation text to parent div if there are no available scooters
   function appendEmptyText(parent) {
+    // create a span and fill it with text
     const span = document.createElement("span");
     span.innerHTML = "There are no available scooters in this location";
 
+    // set class for the span
     span.className = "text-body-lg text-gray-600 text-center";
+    // add the span to the parent div
     parent.appendChild(span);
   }
 
+  // initializes map with markers and their functionality
   function initMap() {
     const scooterContainer = document.getElementById("scooterContainer");
 
