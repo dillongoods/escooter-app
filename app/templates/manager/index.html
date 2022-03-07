@@ -2,7 +2,19 @@
 <div class="w-full mt-10 flex w-full gap-6">
   <div class="flex-1">
     <span class="text-h6">Scooters</span>
-    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6"></div>
+    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
+     {% if Scooters|length == 0 %}
+        <span class="text-center text-body-lg text-gray-500 my-8"
+          >It appears there are no scooters yet. You can add them now</span
+        >
+        {% else %} {% for scooter in Scooters %}
+        <div class="mb-3 py-2">
+        <h1> scooter </h1>
+          <span>{{scooter.availability}}</span>
+        </div>
+        {% endfor %} {% endif %}
+    </div>
+    
   </div>
   <div class="flex-1">
     <span class="text-h6">Locations</span>
