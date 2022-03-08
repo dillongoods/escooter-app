@@ -1,6 +1,6 @@
 from flask import session, render_template, request, redirect, flash, json
 from app import app, models, db
-from flask_security import login_required, current_user, logout_user
+from flask_security import current_user, logout_user, auth_required, roles_required
 from .forms import StoreCardDetailsForm, CreateBookingForm, LocationForm
 # from flask_googlemaps import GoogleMaps, Map
 import datetime
@@ -9,8 +9,6 @@ import datetime
 # app.config['GOOGLEMAPS_KEY'] = "AIzaSyAGIOSFvvdnHopfkR2wYQ9NJK5ZMk1fafQ"
 # GoogleMaps(app)
 
-
-MANAGER_EMAIL = 'adminadmin321@gmail.com'
 
 # Wrapper for render_template to always include whether user is authenticated
 def render_template_auth(template, **template_vars):
@@ -22,8 +20,8 @@ def render_template_auth(template, **template_vars):
 
 # Manager route
 def checkAndRedirectManager():
-    if current_user.email == MANAGER_EMAIL:
-        return redirect('/manager')
+    if current_user.has_role('manager'):
+        return render_template_auth('manager/index.html')
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -31,34 +29,26 @@ def page_not_found(e):
 
 
 @app.route('/', methods=['GET', 'POST'])
+@auth_required()
 def index():
-    if current_user.email == MANAGER_EMAIL:
-        return redirect('/manager')
+    checkAndRedirectManager()
 
-    if current_user.is_authenticated:
-        # form = CreateBookingForm()
+    # form = CreateBookingForm()
 
-        # if form.validate_on_submit():
-        #     # HIRING SCOOTER LOGIC
+    # if form.validate_on_submit():
+    #     # HIRING SCOOTER LOGIC
 
-        #     # EMAIL SENDING
+    #     # EMAIL SENDING
+
+    if current_user.has_role('manager'):
+        return render_template_auth('manager/index.html')
            
-        return render_template_auth('index.html')
+    return render_template_auth('index.html')
 
-        # return render_template_auth('index.html', form=allLocations)
-
-    return redirect('/login')
-
-# @app.route('/')
-# def index():
-#     # return render_template_auth('index.html')
-
-#     roles = models.Role.query.all()
-#     users = models.User.query.all()
-#     return render_template_auth('index.html', roles=roles, users=users)
-
+    # return render_template_auth('index.html', form=allLocations)
 
 @app.route('/account', methods=['GET'])
+@auth_required()
 def my_account():
 
     #for users to view their account details
@@ -67,19 +57,11 @@ def my_account():
 
     user = models.User.query.filter_by(email=user_email).first()
     details = models.BankDetails.query.filter_by(id=user.bank_details_id).first()
-    
-    # details = {
-    #     "id":1,
-    #     "name":"MR BUSHNELL",
-    #     "accountNo":12034283234,
-    #     "expiry": datetime.datetime.now().date(),
-    #     "sortCode":2113,
-    #     "cvc":666,
-    # }
 
     return render_template_auth('my_account.html', title = 'My Account', user=user, card_details=details)
 
 @app.route('/account/bank_details', methods=['GET', 'POST'])
+@auth_required()
 def bank_details():
 
     #for users to store their bank details
@@ -118,6 +100,8 @@ def bank_details():
 
 # Manager Page
 @app.route('/manager')
+@roles_required('manager')
+@auth_required()
 def manager():
     allLocations = models.Location.query.all()
     
@@ -126,6 +110,8 @@ def manager():
     return render_template_auth('manager/index.html', locations=allLocations, Scooters=allScooters)
 
 @app.route('/manager/add-location', methods=['GET', 'POST'])
+@roles_required('manager')
+@auth_required()
 def managerAddLocation():
     form = LocationForm()
 

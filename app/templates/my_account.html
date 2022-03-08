@@ -3,13 +3,19 @@
   <div class="flex-1">
     <span class="text-h6">My account</span>
     <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
-      <!-- <div class="flex justify-between mb-3">
+      <div class="flex justify-between mb-3">
         <span class="text-body-md !font-bold">Name:</span>
         <span class="text-body-md">{{user.first_name}} {{user.last_name}}</span>
-      </div> -->
+      </div>
       <div class="flex justify-between">
         <span class="text-body-md !font-bold">Email:</span>
         <span class="text-body-md">{{user.email}}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-body-md !font-bold">Roles:</span>
+        {% for role in user.roles %}
+        <span class="text-body-md">{{role.name}}</span>
+        {% endfor %}
       </div>
     </div>
   </div>

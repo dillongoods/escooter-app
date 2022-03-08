@@ -5,6 +5,8 @@ from flask_security import Security, SQLAlchemyUserDatastore, auth_required, has
 from flask_security.models import fsqla_v2 as fsqla
 import logging
 
+MANAGER_EMAIL = 'adminadmin321@gmail.com'
+
 app = Flask(__name__)
 app.debug = True
 
@@ -35,6 +37,6 @@ def create_user():
         user_datastore.create_role(name="manager")
         user_datastore.create_role(name="employee")
 
-    if not user_datastore.find_user(email="test@me.com"):
-        user_datastore.create_user(email="test@me.com", password=hash_password("password"))
+    if not user_datastore.find_user(email=MANAGER_EMAIL):
+        user_datastore.create_user(first_name='Admin', last_name='User', email=MANAGER_EMAIL, password="admin1234", roles=["manager"])
     db.session.commit()
