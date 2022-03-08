@@ -51,10 +51,10 @@ class Booking(db.Model):
                         db.ForeignKey('locations.id'))
 
 
-class Scooter(db.Model):
+class Scooter(db.Model, Serializer):
     __tablename__ = 'scooters'
     id = db.Column(db.Integer(), primary_key=True)
-    availability = db.Column(db.String(255))
+    availability = db.Column(db.Boolean(), default=True)
     location_id = db.Column('location_id', db.Integer(),
                             db.ForeignKey('locations.id'))
 

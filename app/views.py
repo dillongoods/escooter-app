@@ -120,8 +120,10 @@ def bank_details():
 @app.route('/manager')
 def manager():
     allLocations = models.Location.query.all()
+    
+    allScooters = models.Scooter.query.all()
 
-    return render_template_auth('manager/index.html', locations=allLocations)
+    return render_template_auth('manager/index.html', locations=allLocations, Scooters=allScooters)
 
 @app.route('/manager/add-location', methods=['GET', 'POST'])
 def managerAddLocation():
@@ -149,10 +151,37 @@ def logout():
     logout_user()
     return redirect('/login')
 
-# API
+# API ---------------------------------------
 
+# Get all locations
 @app.route('/api/getLocations')
 def getLocations():
     allLocations = models.Location.query.all()
     
     return json.jsonify({'locations': models.Location.serialize_list(allLocations)})
+
+# Get all scooters in a specific location
+@app.route('/api/getScooters')
+def getScootersInLocation():
+    locationName = request.args.get('location')
+
+    location = models.Location.query.filter_by(name=locationName).first()
+
+    scootersInLocation = models.Scooter.query.filter_by(location_id=location, availability=True).all()
+
+    return json.jsonify({'scooters': models.Scooter.serialize_list(scootersInLocation)})
+
+# Add a scooter to the location
+@app.route('/api/addScooter')
+def addScooterToLocation():
+    locationId = request.args.get('locationId')
+
+    newScooter = models.Scooter(
+        location_id = locationId
+    )
+
+    db.session.add(newScooter)
+    db.session.commit()
+
+    return '200'
+
