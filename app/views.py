@@ -2,13 +2,9 @@ from flask import session, render_template, request, redirect, flash, json
 from app import app, models, db
 from flask_security import current_user, logout_user, auth_required, roles_required
 from .forms import StoreCardDetailsForm, CreateBookingForm, LocationForm
-# from flask_googlemaps import GoogleMaps, Map
 import datetime
 
-# Google Maps
-# app.config['GOOGLEMAPS_KEY'] = "AIzaSyAGIOSFvvdnHopfkR2wYQ9NJK5ZMk1fafQ"
-# GoogleMaps(app)
-
+HIRE_CHOICES = [('1', '1 hr'), ('2', '4 hrs'), ('3', '1 day'), ('4', '1 week')]
 
 # Wrapper for render_template to always include whether user is authenticated
 def render_template_auth(template, **template_vars):
@@ -33,7 +29,7 @@ def page_not_found(e):
 def index():
     checkAndRedirectManager()
 
-    # form = CreateBookingForm()
+    form = CreateBookingForm()
 
     # if form.validate_on_submit():
     #     # HIRING SCOOTER LOGIC
@@ -98,6 +94,35 @@ def bank_details():
  
     return render_template_auth('bank_details.html', title = 'My Account', form=details_form)
 
+
+# Hire a scooter
+@app.route('/hireScooter')
+def hireScooter():
+    locationName = request.args.get('location')
+    scooterId = request.args.get('scooterId')
+
+    allLocations = models.Location.query.all()
+    location = models.Location.query.filter_by(name=locationName).first()
+    scooter = models.Scooter.query.filter_by(id=scooterId).first()
+
+    if scooter.availability == False:
+        return redirect('/')
+    
+    return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES)
+
+# Perform the hiring
+@app.route('/confirmHire')
+def confirmHire():
+    pickupLocationId = request.args.get('pickupLocationId')
+    dropoffLocationName = request.args.get('dropoffLocationName')
+    durationInHours = request.args.get('durationInHours')
+    cost = request.args.get('cost')
+    scooterId = request.args.get('scooterId')
+
+    print(pickupLocationId, dropoffLocationName, durationInHours, cost, scooterId)
+
+    return redirect('/')
+
 # Manager Page
 @app.route('/manager')
 @roles_required('manager')
@@ -153,7 +178,7 @@ def getScootersInLocation():
 
     location = models.Location.query.filter_by(name=locationName).first()
 
-    scootersInLocation = models.Scooter.query.filter_by(location_id=location, availability=True).all()
+    scootersInLocation = models.Scooter.query.filter_by(location_id=location.id, availability=True).all()
 
     return json.jsonify({'scooters': models.Scooter.serialize_list(scootersInLocation)})
 
@@ -170,4 +195,5 @@ def addScooterToLocation():
     db.session.commit()
 
     return '200'
+
 

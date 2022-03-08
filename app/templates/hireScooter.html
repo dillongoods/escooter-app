@@ -1,0 +1,149 @@
+{% extends "base/index.html" %} {% block content %}
+<div
+  class="max-w-[600px] w-full mx-auto flex flex-col h-full justify-start mb-auto mt-16"
+>
+  <span class="text-h6">Hire</span>
+  <span class="text-gray-600 mt-1"
+    >Choose the duration and dropoff place of your scooter</span
+  >
+  <div class="mt-6 bg-white drop-shadow-lg rounded-xl p-6">
+    <div class="flex justify-between items-center mb-6">
+      <span class="text-h4">Your scooter</span>
+      <a href="/">Go back</a>
+    </div>
+    <div class="flex items-center pb-8 border-b border-gray-5 w-full">
+      <img src="static/favicon.ico" class="w-9 h-9 mr-2" />
+      <div class="flex">
+        <span class="text-h3">Scooter</span>
+        <span class="text-h3 ml-1" id="scooterIdSpan">{{scooter.id}}</span>
+      </div>
+    </div>
+    <div class="mt-6 flex gap-6 pb-10 border-b border-gray-5">
+      <div class="flex flex-col flex-1">
+        <span class="text-h4">Pickup Location</span>
+        <div class="mt-4 bg-gray-100 py-3 px-4 rounded-md">
+          <span id="pickupLocation">{{location.name}}</span>
+          <span id="pickupLocationId" class="hidden">{{location.id}}</span>
+        </div>
+      </div>
+      <div class="flex flex-col flex-1">
+        <span class="text-h4">Dropoff Location</span>
+        <select
+          name="colour"
+          class="mt-4 border-black border rounded-md py-3 px-4"
+          id="locationSelect"
+        >
+          {% for oneLocation in allLocations %}
+          <option value="{{oneLocation.name}}" id="{{ oneLocation.id }}">
+            {{oneLocation.name}}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="mt-6 flex gap-6 pb-10 border-b border-gray-5">
+      <div class="flex flex-col flex-1">
+        <span class="text-h4">Duration</span>
+        <select
+          name="colour"
+          class="mt-4 border-black border rounded-md py-3 px-4"
+          id="durationSelect"
+        >
+          {% for duration in durationOptions %}
+          <option value="{{duration[0]}}">{{duration[1]}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="flex flex-col flex-1">
+        <span class="text-h4">Cost</span>
+        <div class="mt-4 bg-gray-100 py-3 px-4 rounded-md">
+          <div class="flex">
+            <span id="cost" class="font-bold">4</span>
+            <span class="font-bold">£</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 flex justify-between">
+      <div class="flex items-center my-4 ml-4">
+        <input type="checkbox" class="mr-3" id="acceptToc" />
+        <span>I accept the </span>
+        <span class="text-orange-600 ml-1">Terms of Conditions</span>
+      </div>
+      <input
+        type="submit"
+        id="submitButton"
+        class="bg-green-600 disabled:bg-gray-100 disabled:text-gray-400 text-white text-h4 py-2 rounded-lg cursor-pointer px-8 ml-4"
+        value="Confirm Hire"
+      />
+    </div>
+  </div>
+  <script>
+    const selectTag = document.getElementById("durationSelect");
+    const costDisplay = document.getElementById("cost");
+    const costField = document.getElementById("costField");
+
+    selectTag.addEventListener("change", function change(el) {
+      switch (selectTag.value) {
+        case "1":
+          costDisplay.innerText = "4";
+          break;
+        case "2":
+          costDisplay.innerText = "14";
+          break;
+        case "3":
+          costDisplay.innerText = "30";
+          break;
+        case "4":
+          costDisplay.innerText = "80";
+          break;
+      }
+    });
+
+    const checkBox = document.getElementById("acceptToc");
+    const submitButton = document.getElementById("submitButton");
+    const locationSelect = document.getElementById("locationSelect");
+    const pickupLocation = document.getElementById("pickupLocation");
+    const pickupLocationId = document.getElementById("pickupLocationId");
+    const durationSelect = document.getElementById("durationSelect");
+    const scooterIdSpan = document.getElementById("scooterIdSpan");
+
+    submitButton.disabled = true;
+
+    checkBox.addEventListener("click", () => {
+      if (checkBox.checked) {
+        submitButton.disabled = false;
+      } else {
+        submitButton.disabled = true;
+      }
+    });
+
+    const getHoursValueFromCost = (cost) => {
+      switch (Number(cost)) {
+        case 4:
+          return 1;
+          break;
+        case 14:
+          return 4;
+          break;
+        case 30:
+          return 24;
+          break;
+        case 80:
+          return 168;
+          break;
+      }
+    };
+
+    submitButton.addEventListener("click", () => {
+      const pickupLocationIdValue = pickupLocationId.innerHTML;
+      const dropOffLocationName = locationSelect.value;
+      const cost = costDisplay.innerText;
+      const scooterId = scooterIdSpan.innerHTML;
+
+      const durationInHours = getHoursValueFromCost(costDisplay.innerText);
+      window.location.href = `/confirmHire?pickupLocationId=${pickupLocationIdValue}&dropoffLocationName=${dropOffLocationName}&durationInHours=${durationInHours}&cost=${cost}&scooterId=${scooterId}`;
+    });
+  </script>
+  {% endblock %}
+</div>

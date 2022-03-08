@@ -119,11 +119,17 @@
               scooterTitleSpan.className = "text-h3";
 
               scooterDiv.className =
-                "px-6 py-4 border-b border-black w-full flex items-center";
+                "px-6 py-4 border-b border-black w-full flex items-center cursor-pointer";
               scooterDiv.appendChild(scooterImage);
               scooterDiv.appendChild(scooterTitleSpan);
 
-              scooterContainer.className = "flex-1 flex flex-col justify-start";
+              // add on click listener to send request to backend
+              scooterDiv.addEventListener("click", () => {
+                window.location.href = `/hireScooter?location=${marker.title}&scooterId=${scooter.id}`;
+              });
+
+              scooterContainer.className =
+                "flex-1 flex flex-col justify-start overflow-y-auto";
               scooterContainer.appendChild(scooterDiv);
             });
           });
