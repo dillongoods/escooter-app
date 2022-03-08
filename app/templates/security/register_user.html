@@ -10,18 +10,18 @@
     >
       {{ register_user_form.hidden_tag() }}
       <div class="mb-3">
-        {{ register_user_form.firstName.label(class_="mb-2") }} {{
-        register_user_form.firstName(class_='mt-2 w-full p-3 rounded-lg border
+        {{ register_user_form.first_name.label(class_="mb-2") }} {{
+        register_user_form.first_name(class_='mt-2 w-full p-3 rounded-lg border
         border-black', placeholder_="First name") }} {% for error in
-        register_user_form.firstName.errors %}
+        register_user_form.first_name.errors %}
         <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
       </div>
       <div class="mb-3">
-        {{ register_user_form.lastName.label }} {{
-        register_user_form.lastName(class_='mt-2 w-full p-3 rounded-lg border
+        {{ register_user_form.last_name.label }} {{
+        register_user_form.last_name(class_='mt-2 w-full p-3 rounded-lg border
         border-black', placeholder_="Last name") }} {% for error in
-        register_user_form.lastName.errors %}
+        register_user_form.last_name.errors %}
         <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
       </div>

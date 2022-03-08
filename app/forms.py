@@ -12,8 +12,8 @@ LOCATION_CHOICES = [('1', 'Trinity Centre'), ('2', 'Train Station'),
 
 
 class RegistrationForm(RegisterForm):
-    firstName = StringField('First name')
-    lastName = StringField('Last name')
+    first_name = StringField('First name')
+    last_name = StringField('Last name')
     dob = DateField('Date of Birth')
 
 class StoreCardDetailsForm(FlaskForm):
