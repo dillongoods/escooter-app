@@ -141,9 +141,6 @@ def hireScooter():
         u.bank_details_id = details.id
         db.session.commit()
 
-    #data = json.load(request.data)
-    #duration = data.get("durationSelect")
-
     return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
 # Perform the hiring
@@ -151,20 +148,17 @@ def hireScooter():
 
 @app.route('/confirmHire')
 def confirmHire():
-    pickupLocationId = request.args.get('pickupLocationId')
+    pickupLocationId = int(request.args.get('pickupLocationId'))
     dropoffLocationName = request.args.get('dropoffLocationName')
-    durationInHours = request.args.get('durationInHours')
-    cost = request.args.get('cost')
-    scooterId = request.args.get('scooterId')
+    durationInHours = int(request.args.get('durationInHours'))
+    cost = int(request.args.get('cost'))
+    scooterId = int(request.args.get('scooterId'))
 
-    print(pickupLocationId, dropoffLocationName,
-          durationInHours, cost, scooterId)
-
-    dropoffLocationId = models.Location.query.filter_by(
+    dropoffLocation = models.Location.query.filter_by(
         name=dropoffLocationName).first()
 
     booking = models.Booking(user_id=current_user.id, scooter_id=scooterId, price=cost,
-                             length=durationInHours, pickup=pickupLocationId, dropoff=dropoffLocationId)
+                             length=durationInHours, pickup=pickupLocationId, dropoff=dropoffLocation.id)
 
     selectedScooter = models.Scooter.query.filter_by(id=scooterId).first()
     selectedScooter.availability = False
@@ -173,10 +167,11 @@ def confirmHire():
     db.session.commit()
     db.session.flush()
 
-    pickupLocationName = models.Location.query.filter_by(id=pickupLocationId).first()
+    pickupLocationName = models.Location.query.filter_by(
+        id=pickupLocationId).first()
     currentuser = models.User.query.filter_by(id=current_user.id)
 
-    return render_template_auth('confirmHire.html', scooter=selectedScooter, pickupLocationName=pickupLocationName, dropoffLocationName=dropoffLocationName, cost=cost, durationInHours=durationInHours currentuser=currentuser)
+    return render_template_auth('confirmHire.html', scooter=selectedScooter, pickupLocationName=pickupLocationName, dropoffLocationName=dropoffLocationName, cost=cost, durationInHours=durationInHours, currentuser=currentuser)
 
 # Manager Page
 
