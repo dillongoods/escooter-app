@@ -162,20 +162,10 @@ def confirmHire():
     db.session.commit()
     db.session.flush()
 
-    # class Booking(db.Model):
-    #     __tablename__ = 'bookings'
-    #     id = db.Column(db.Integer(), primary_key=True)
-    #     user_id = db.Column('user_id', db.Integer(), db.ForeignKey('users.id'))
-    #     scooter_id = db.Column('scooter_id', db.Integer(),
-    #                            db.ForeignKey('scooters.id'))
-    #     price = db.Column(db.String(255))
-    #     length = db.Column(db.Integer())
-    #     pickup = db.Column('pickup_location_id', db.Integer(),
-    #                        db.ForeignKey('locations.id'))
-    #     dropoff = db.Column('dropoff_location_id', db.Integer(),
-    #                         db.ForeignKey('locations.id'))
+    pickupLocationName = models.Location.query.filter_by(id=pickupLocationId).first()
+    currentuser = models.User.query.filter_by(id=current_user.id)
 
-    return redirect('/')
+    return render_template_auth('confirmHire.html', scooter=selectedScooter, pickupLocationName=pickupLocationName, dropoffLocationName=dropoffLocationName, cost=cost, durationInHours=durationInHours currentuser=currentuser)
 
 # Manager Page
 @app.route('/manager')

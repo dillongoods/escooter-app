@@ -1,0 +1,28 @@
+{% extends "base/index.html" %} {% block content %}
+<div
+  class="max-w-[600px] w-full mx-auto flex flex-col h-full justify-start mb-auto mt-16"
+>
+  <span class="text-h6">Hire</span>
+  <span class="text-gray-600 mt-1"
+    >Choose the duration and dropoff place of your scooter</span
+  >
+  <div class="mt-6 bg-white drop-shadow-lg rounded-xl p-6">
+    <div class="flex justify-between items-center mb-6">
+      <span class="text-h4">Your scooter</span>
+      <a href="/">Go back</a>
+    </div>
+    <div class="flex items-center pb-8 border-b border-gray-5 w-full">
+      <img src="static/favicon.ico" class="w-9 h-9 mr-2" />
+      <div class="flex">
+        <span class="text-h3">Scooter</span>
+        <span class="text-h3 ml-1" id="scooterIdSpan">{{scooter.id}}</span>
+        <span class="text-h3 ml-1" id="scooterIdSpan">{{pickupLocationName}}</span>
+        <span class="text-h3 ml-1" id="scooterIdSpan">{{dropoffLocationName}}</span>
+        <span class="text-h3 ml-1" id="scooterIdSpan">{{cost}}</span>
+        <span class="text-h3 ml-1" id="scooterIdSpan">{{durationInHours}}</span>
+        <span class="text-h3 ml-1" id="scooterIdSpan">{{currentuser.bank_details}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
