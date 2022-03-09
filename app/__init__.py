@@ -5,7 +5,7 @@ from flask_security import Security, SQLAlchemyUserDatastore, auth_required, has
 from flask_security.models import fsqla_v2 as fsqla
 import logging
 
-MANAGER_EMAIL = 'adminadmin321@gmail.com'
+MANAGER_EMAIL = 'admin321@gmail.com'
 
 app = Flask(__name__)
 app.debug = True

@@ -96,7 +96,7 @@ def bank_details():
 
 
 # Hire a scooter
-@app.route('/hireScooter')
+@app.route('/hireScooter', methods=['GET', 'POST'])
 def hireScooter():
     locationName = request.args.get('location')
     scooterId = request.args.get('scooterId')
@@ -107,8 +107,20 @@ def hireScooter():
 
     if scooter.availability == False:
         return redirect('/')
+
+    user_email = current_user.email
+    user = models.User.query.filter_by(email=user_email).first()
+    details = models.BankDetails.query.filter_by(id=user.bank_details_id).first()
+    details_form = StoreCardDetailsForm()
+
+    accountNo = str(details.accountNo)[-4:] if details else None
+
+    data = json.load(request.data)
+    duration = data.get("durationSelect")
     
-    return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES)
+    
+
+    return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
 # Perform the hiring
 @app.route('/confirmHire')
