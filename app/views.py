@@ -167,11 +167,16 @@ def confirmHire():
     db.session.commit()
     db.session.flush()
 
-    pickupLocationName = models.Location.query.filter_by(
+    pickupLocation = models.Location.query.filter_by(
         id=pickupLocationId).first()
-    currentuser = models.User.query.filter_by(id=current_user.id)
+    user = models.User.query.filter_by(id=current_user.id).first()
 
-    return render_template_auth('confirmHire.html', scooter=selectedScooter, pickupLocationName=pickupLocationName, dropoffLocationName=dropoffLocationName, cost=cost, durationInHours=durationInHours, currentuser=currentuser)
+    bankDetails = models.BankDetails.query.filter_by(
+        id=user.bank_details_id).first()
+
+    accountNo = str(bankDetails.accountNo)[-4:] if bankDetails else None
+
+    return render_template_auth('confirmHire.html', scooter=selectedScooter, pickupLocationName=pickupLocation.name, dropoffLocationName=dropoffLocationName, cost=cost, durationInHours=durationInHours, accountNo=accountNo)
 
 # Manager Page
 

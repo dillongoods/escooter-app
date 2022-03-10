@@ -1,28 +1,63 @@
 {% extends "base/index.html" %} {% block content %}
+<img src="static/successImage.png" class="mx-auto mt-20" />
 <div
-  class="max-w-[600px] w-full mx-auto flex flex-col h-full justify-start mb-auto mt-16"
+  class="max-w-[392px] w-full mx-auto h-full flex flex-col justify-start mb-auto mt-10"
 >
-  <span class="text-h6">Hire</span>
-  <span class="text-gray-600 mt-1"
-    >Choose the duration and dropoff place of your scooter</span
+  <span class="text-h6 text-center">Success!</span>
+  <span class="text-gray-600 mt-1 text-center"
+    >Here are your order details</span
   >
   <div class="mt-6 bg-white drop-shadow-lg rounded-xl p-6">
     <div class="flex justify-between items-center mb-6">
       <span class="text-h4">Your scooter</span>
-      <a href="/">Go back</a>
     </div>
-    <div class="flex items-center pb-8 border-b border-gray-5 w-full">
+    <div class="flex items-center pb-6 border-b border-gray-5 w-full">
       <img src="static/favicon.ico" class="w-9 h-9 mr-2" />
       <div class="flex">
         <span class="text-h3">Scooter</span>
         <span class="text-h3 ml-1" id="scooterIdSpan">{{scooter.id}}</span>
-        <span class="text-h3 ml-1" id="scooterIdSpan">{{pickupLocationName}}</span>
-        <span class="text-h3 ml-1" id="scooterIdSpan">{{dropoffLocationName}}</span>
-        <span class="text-h3 ml-1" id="scooterIdSpan">{{cost}}</span>
-        <span class="text-h3 ml-1" id="scooterIdSpan">{{durationInHours}}</span>
-        <span class="text-h3 ml-1" id="scooterIdSpan">{{currentuser.bank_details}}</span>
+      </div>
+    </div>
+    <div class="mt-4">
+      <div class="flex w-full justify-between items-center py-3">
+        <span class="text-h4">Pickup</span>
+        <span class="text-body-lg">{{pickupLocationName}}</span>
+      </div>
+      <div class="flex w-full justify-between items-center py-3">
+        <span class="text-h4">Dropoff</span>
+        <span class="text-body-lg">{{dropoffLocationName}}</span>
+      </div>
+      <div class="flex w-full justify-between items-center py-3">
+        <span class="text-h4">Duration</span>
+        <span class="text-body-lg"
+          >{% if durationInHours == 1 %} 1 hour {% elif durationInHours == 4 %}
+          4 hours {% elif durationInHours == 24 %} 1 day {% elif durationInHours
+          == 168 %} 1 week {% endif %}</span
+        >
+      </div>
+      <div class="flex w-full justify-between items-center py-3">
+        <span class="text-h4">Cost</span>
+        <span class="text-body-lg">{{cost}} £</span>
+      </div>
+      <div class="flex w-full justify-between items-center py-3">
+        <span class="text-h4">Paid with</span>
+        <span class="text-body-lg">**** {{accountNo}}</span>
+      </div>
+      <div class="w-full h-px bg-gray-200 my-4"></div>
+      <div
+        id="goHome"
+        class="p-3 w-full mt-4 border border-gray-800 text-h4 rounded-lg border-2 text-center hover:bg-gray-100 cursor-pointer"
+      >
+        Go home
       </div>
     </div>
   </div>
 </div>
+<script>
+  const goHomeButton = document.getElementById("goHome");
+
+  goHomeButton.addEventListener("click", () => {
+    window.location.href = "/";
+  });
+</script>
 {% endblock %}
