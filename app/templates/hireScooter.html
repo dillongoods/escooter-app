@@ -210,7 +210,12 @@
       const scooterId = scooterIdSpan.innerHTML;
 
       const durationInHours = getHoursValueFromCost(costDisplay.innerText);
-      window.location.href = `/confirmHire?pickupLocationId=${pickupLocationIdValue}&dropoffLocationName=${dropOffLocationName}&durationInHours=${durationInHours}&cost=${cost}&scooterId=${scooterId}`;
+
+      $.ajax({
+        url: `/performHire?pickupLocationId=${pickupLocationIdValue}&dropoffLocationName=${dropOffLocationName}&durationInHours=${durationInHours}&cost=${cost}&scooterId=${scooterId}`,
+      }).done(() => {
+        window.location.href = `/confirmHire?pickupLocationId=${pickupLocationIdValue}&dropoffLocationName=${dropOffLocationName}&durationInHours=${durationInHours}&cost=${cost}&scooterId=${scooterId}`;
+      });
     });
   </script>
   {% endblock %}

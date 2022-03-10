@@ -146,8 +146,8 @@ def hireScooter():
 # Perform the hiring
 
 
-@app.route('/confirmHire')
-def confirmHire():
+@app.route('/performHire')
+def performHire():
     pickupLocationId = int(request.args.get('pickupLocationId'))
     dropoffLocationName = request.args.get('dropoffLocationName')
     durationInHours = int(request.args.get('durationInHours'))
@@ -166,6 +166,19 @@ def confirmHire():
     db.session.add(booking)
     db.session.commit()
     db.session.flush()
+
+    return '200'
+
+
+@app.route('/confirmHire')
+def confirmHire():
+    pickupLocationId = int(request.args.get('pickupLocationId'))
+    dropoffLocationName = request.args.get('dropoffLocationName')
+    durationInHours = int(request.args.get('durationInHours'))
+    cost = int(request.args.get('cost'))
+    scooterId = int(request.args.get('scooterId'))
+
+    selectedScooter = models.Scooter.query.filter_by(id=scooterId).first()
 
     pickupLocation = models.Location.query.filter_by(
         id=pickupLocationId).first()
