@@ -16,13 +16,6 @@ def render_template_auth(template, **template_vars):
         **template_vars
     )
 
-# Manager route
-
-
-def checkAndRedirectManager():
-    if current_user.has_role('manager'):
-        return render_template_auth('manager/index.html')
-
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -32,21 +25,10 @@ def page_not_found(e):
 @app.route('/', methods=['GET', 'POST'])
 @auth_required()
 def index():
-    checkAndRedirectManager()
-
-    form = CreateBookingForm()
-
-    # if form.validate_on_submit():
-    #     # HIRING SCOOTER LOGIC
-
-    #     # EMAIL SENDING
-
     if current_user.has_role('manager'):
-        return render_template_auth('manager/index.html')
+        return redirect('/manager')
 
     return render_template_auth('index.html')
-
-    # return render_template_auth('index.html', form=allLocations)
 
 
 @app.route('/account', methods=['GET'])

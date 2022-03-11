@@ -3,28 +3,34 @@
   <div class="flex-1">
     <span class="text-h6">Scooters</span>
     <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
-      {% if Scooters|length == 0 %}
-      <span class="text-center text-body-lg text-gray-500 my-8"
-        >It appears there are no scooters yet. You can add them now</span
-      >
-      {% else %} {% for scooter in Scooters %}
-      <div class="mb-3 py-2">
-        <img
-          class="h-16 w-16 object-cover float-left p-4"
-          src="static/favicon.ico"
-          alt="small scooter icon"
-        />
-        <span>Scooter ID: {{scooter.id}}</span><br />
-        <p class="flex justify-between">
-          {% if scooter.availability == True %}
-          <span class="text-green-600">Available: Yes &#10003;</span>
-          {% else %}
-          <span class="text-red-600">Available: No &#10007;</span>
-          {% endif %}
-          <span>Location: {{scooter.location_id}}</span>
-        </p>
+      <div class="overflow-y-auto max-h-[400px]">
+        {% if Scooters|length == 0 %}
+        <span class="text-center text-body-lg text-gray-500 my-8"
+          >It appears there are no scooters yet. You can add them now</span
+        >
+        {% else %} {% for scooter in Scooters %}
+        <div class="mb-3 py-2 flex items-center flex-1">
+          <img
+            class="h-10 w-10 mr-4 object-cover float-left"
+            src="static/favicon.ico"
+            alt="small scooter icon"
+          />
+          <div class="flex flex-col w-full">
+            <div class="flex justify-between w-full">
+              <span>Scooter ID: {{scooter.id}}</span><br />
+              <span class="mr-4">Location: {{scooter.location_id}}</span>
+            </div>
+            <p class="flex justify-between">
+              {% if scooter.availability == True %}
+              <span class="text-green-600">Available: Yes &#10003;</span>
+              {% else %}
+              <span class="text-red-600">Available: No &#10007;</span>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+        {% endfor %} {% endif %}
       </div>
-      {% endfor %} {% endif %}
     </div>
   </div>
   <div class="flex-1">
