@@ -1,7 +1,10 @@
 from email.policy import default
 from app import db
+from sqlalchemy import DateTime
+from sqlalchemy.sql import func
 from flask_security.models import fsqla_v2 as fsqla
 from sqlalchemy.inspection import inspect
+
 
 class Serializer(object):
 
@@ -11,6 +14,7 @@ class Serializer(object):
     @staticmethod
     def serialize_list(l):
         return [m.serialize() for m in l]
+
 
 class Role(db.Model, fsqla.FsRoleMixin):
     __tablename__ = 'roles'
@@ -37,7 +41,7 @@ class User(db.Model, fsqla.FsUserMixin):
                             backref=db.backref('users', lazy='dynamic'))
 
 
-class Booking(db.Model):
+class Booking(db.Model, Serializer):
     __tablename__ = 'bookings'
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column('user_id', db.Integer(), db.ForeignKey('users.id'))
@@ -49,6 +53,9 @@ class Booking(db.Model):
                        db.ForeignKey('locations.id'))
     dropoff = db.Column('dropoff_location_id', db.Integer(),
                         db.ForeignKey('locations.id'))
+    is_active = db.Column(db.Boolean(), default=True)
+    time_created = db.Column(DateTime(timezone=True),
+                             server_default=func.now())
 
 
 class Scooter(db.Model, Serializer):
@@ -71,7 +78,7 @@ class Review(db.Model):
     __tablename__ = 'reviews'
     id = db.Column(db.Integer(), primary_key=True)
     booking_id = db.Column('booking_id', db.Integer(),
-            db.ForeignKey('bookings.id'))
+                           db.ForeignKey('bookings.id'))
     rating = db.Column(db.Integer())
     message = db.Column(db.String(1000))
     priority = db.Column(db.Integer())

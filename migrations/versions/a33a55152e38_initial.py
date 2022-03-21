@@ -1,8 +1,8 @@
-"""initial migration
+"""initial
 
-Revision ID: 336d2e0adf58
+Revision ID: a33a55152e38
 Revises: 
-Create Date: 2022-03-06 20:19:05.197290
+Create Date: 2022-03-21 19:51:52.517143
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '336d2e0adf58'
+revision = 'a33a55152e38'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -45,7 +45,7 @@ def upgrade():
     )
     op.create_table('scooters',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('availability', sa.String(length=255), nullable=True),
+    sa.Column('availability', sa.Boolean(), nullable=True),
     sa.Column('location_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['location_id'], ['locations.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -91,6 +91,8 @@ def upgrade():
     sa.Column('length', sa.Integer(), nullable=True),
     sa.Column('pickup_location_id', sa.Integer(), nullable=True),
     sa.Column('dropoff_location_id', sa.Integer(), nullable=True),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.Column('time_created', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.ForeignKeyConstraint(['dropoff_location_id'], ['locations.id'], ),
     sa.ForeignKeyConstraint(['pickup_location_id'], ['locations.id'], ),
     sa.ForeignKeyConstraint(['scooter_id'], ['scooters.id'], ),

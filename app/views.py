@@ -6,6 +6,24 @@ import datetime
 
 HIRE_CHOICES = [('1', '1 hr'), ('2', '4 hrs'), ('3', '1 day'), ('4', '1 week')]
 
+
+def end_active_bookings():
+    activeBookings = models.Booking.query.filter_by(is_active=True).all()
+
+    now = datetime.datetime.now().timestamp()
+
+    for item in activeBookings:
+        durationInSeconds = item.length * 3600
+
+        if item.time_created.timestamp() + durationInSeconds < now:
+            scooter = models.Scooter.query.filter_by(
+                id=item.scooter_id).first()
+
+            scooter.availability = True
+            item.is_active = False
+
+            db.session.commit()
+
 # Wrapper for render_template to always include whether user is authenticated
 
 
@@ -25,6 +43,8 @@ def page_not_found(e):
 @app.route('/', methods=['GET', 'POST'])
 @auth_required()
 def index():
+    end_active_bookings()
+
     if current_user.has_role('manager'):
         return redirect('/manager')
 
@@ -34,7 +54,7 @@ def index():
 @app.route('/account', methods=['GET'])
 @auth_required()
 def my_account():
-
+    end_active_bookings()
     # for users to view their account details
 
     user_email = current_user.email
@@ -49,7 +69,7 @@ def my_account():
 @app.route('/account/bank_details', methods=['GET', 'POST'])
 @auth_required()
 def bank_details():
-
+    end_active_bookings()
     # for users to store their bank details
     #userid = session.get('id')
     #user = models.User.query.filter_by(id=userid).first()
@@ -88,6 +108,7 @@ def bank_details():
 # Hire a scooter
 @app.route('/hireScooter', methods=['GET', 'POST'])
 def hireScooter():
+    end_active_bookings()
     locationName = request.args.get('location')
     scooterId = request.args.get('scooterId')
 
@@ -180,6 +201,7 @@ def confirmHire():
 @roles_required('manager')
 @auth_required()
 def manager():
+    end_active_bookings()
     allLocations = models.Location.query.all()
 
     allScooters = models.Scooter.query.all()
@@ -191,6 +213,7 @@ def manager():
 @roles_required('manager')
 @auth_required()
 def managerAddLocation():
+    end_active_bookings()
     form = LocationForm()
 
     if form.validate_on_submit():
