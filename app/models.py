@@ -58,6 +58,20 @@ class Booking(db.Model, Serializer):
                              server_default=func.now())
 
 
+
+class BookingViewModel():
+    def __init__(self, booking, pickup_location, dropoff_location):
+        self.id = booking.id
+        self.user_id = booking.user_id
+        self.scooter_id = booking.scooter_id
+        self.price = booking.price
+        self.length = booking.length
+        self.pickupLoc = pickup_location
+        self.dropoffLoc = dropoff_location
+        self.time_created = booking.time_created
+
+
+
 class Scooter(db.Model, Serializer):
     __tablename__ = 'scooters'
     id = db.Column(db.Integer(), primary_key=True)

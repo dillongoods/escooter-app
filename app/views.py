@@ -51,6 +51,14 @@ def index():
     return render_template_auth('index.html')
 
 
+def mapBookingToBookingViewModel(b):
+    pickupLocation = models.Location.query.filter_by(
+        id=b.pickup).first()
+    dropoffLocation = models.Location.query.filter_by(
+        id=b.dropoff).first()
+
+    return models.BookingViewModel(b, pickupLocation, dropoffLocation)
+
 @app.route('/account', methods=['GET'])
 @auth_required()
 def my_account():
@@ -63,7 +71,11 @@ def my_account():
     details = models.BankDetails.query.filter_by(
         id=user.bank_details_id).first()
 
-    return render_template_auth('my_account.html', title='My Account', user=user, card_details=details)
+    bookings = models.Booking.query.filter_by(user_id=current_user.id)
+
+    booking_view_models = map(mapBookingToBookingViewModel, bookings)
+
+    return render_template_auth('my_account.html', title='My Account', user=user, card_details=details, bookings=booking_view_models)
 
 
 @app.route('/account/bank_details', methods=['GET', 'POST'])
