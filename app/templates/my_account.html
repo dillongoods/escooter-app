@@ -1,94 +1,136 @@
 {% extends "base/index.html" %} {% block content %}
-<div class="w-full mt-10 flex w-full gap-6">
-  <div class="flex-1">
-    <span class="text-h6">My account</span>
-    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6 mb-3">
-      <div class="flex justify-between mb-3">
-        <span class="text-body-md !font-bold">Name:</span>
-        <span class="text-body-md">{{user.first_name}} {{user.last_name}}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-body-md !font-bold">Email:</span>
-        <span class="text-body-md">{{user.email}}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-body-md !font-bold">Roles:</span>
-        {% for role in user.roles %}
-        <span class="text-body-md">{{role.name}}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <span class="text-h6">Previous bookings</span>
-    {%for booking in bookings%}
-
-
-    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
-      <div class="flex justify-between">
-        <span class="text-body-md !font-bold">Scooter id:</span>
-        <span class="text-body-md">{{booking.scooter_id}}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-body-md !font-bold">Pickup location:</span>
-        <span class="text-body-md">{{booking.pickupLoc.name}}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-body-md !font-bold">Dropoff location:</span>
-        <span class="text-body-md">{{booking.dropoffLoc.name}}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-body-md !font-bold">Duration:</span>
-        <span class="text-body-md"><p>{{booking.length}} hours</p></span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-body-md !font-bold">Price:</span>
-        <span class="text-body-md"><p>£{{booking.price}}</p></span>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-body-md !font-bold">Time created:</span>
-        <span class="text-body-md">{{booking.time_created}}</span>
-      </div>
-    </div>
-    {%endfor%}
-
-  </div>
-  <div class="flex-1">
-    <span class="text-h6">Card details</span>
-    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
-      {% if card_details %}
-      <div class="flex flex-col">
+<div class="w-full mt-10 flex flex-col w-full">
+  <div class="flex-1 flex gap-6">
+    <div class="flex-1">
+      <span class="text-h6">My account</span>
+      <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6 mb-3">
         <div class="flex justify-between mb-3">
-          <span class="text-body-md !font-bold">Account number:</span>
-          <span class="text-body-md">{{card_details.accountNo}}</span>
-        </div>
-        <div class="flex justify-between mb-3">
-          <span class="text-body-md !font-bold">Sort code:</span>
-          <span class="text-body-md">{{card_details.sortCode}}</span>
-        </div>
-        <div class="flex justify-between mb-3">
-          <span class="text-body-md !font-bold">Expiry:</span>
-          <span class="text-body-md">{{card_details.expiry}}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-body-md !font-bold">CVC:</span>
-          <span class="text-body-md decoration-dashed"
-            >{{card_details.cvc}}</span
+          <span class="text-body-md !font-bold">Name:</span>
+          <span class="text-body-md"
+            >{{user.first_name}} {{user.last_name}}</span
           >
         </div>
+        <div class="flex justify-between">
+          <span class="text-body-md !font-bold">Email:</span>
+          <span class="text-body-md">{{user.email}}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-body-md !font-bold">Roles:</span>
+          {% for role in user.roles %}
+          <span class="text-body-md">{{role.name}}</span>
+          {% endfor %}
+        </div>
       </div>
-      {% else %}
-      <div class="flex flex-col">
-        <span class="text-center text-body-lg text-gray-500 my-8"
-          >It appears you don't have any card details stored.</span
-        >
-        <div class="w-full h-px bg-gray-100 mb-6"></div>
-        <a
-          href="/account/bank_details"
-          class="p-3 w-full border border-gray-800 text-h4 rounded-lg border-2 text-center hover:bg-gray-100"
-          >Add card</a
-        >
+    </div>
+    <div class="flex-1">
+      <span class="text-h6">Card details</span>
+      <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
+        {% if card_details %}
+        <div class="flex flex-col">
+          <div class="flex justify-between mb-3">
+            <span class="text-body-md !font-bold">Account number:</span>
+            <span class="text-body-md">{{card_details.accountNo}}</span>
+          </div>
+          <div class="flex justify-between mb-3">
+            <span class="text-body-md !font-bold">Sort code:</span>
+            <span class="text-body-md">{{card_details.sortCode}}</span>
+          </div>
+          <div class="flex justify-between mb-3">
+            <span class="text-body-md !font-bold">Expiry:</span>
+            <span class="text-body-md">{{card_details.expiry}}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-body-md !font-bold">CVC:</span>
+            <span class="text-body-md decoration-dashed"
+              >{{card_details.cvc}}</span
+            >
+          </div>
+        </div>
+        {% else %}
+        <div class="flex flex-col">
+          <span class="text-center text-body-lg text-gray-500 my-8"
+            >It appears you don't have any card details stored.</span
+          >
+          <div class="w-full h-px bg-gray-100 mb-6"></div>
+          <a
+            href="/account/bank_details"
+            class="p-3 w-full border border-gray-800 text-h4 rounded-lg border-2 text-center hover:bg-gray-100"
+            >Add card</a
+          >
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
+  <div class="flex-1 mt-10">
+    <div class="flex items-center">
+      <div class="bg-orange-500 w-4 h-4 rounded-full mr-4"></div>
+      <span class="text-h6"> Current bookings</span>
+    </div>
+    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6 flex flex-col">
+      <div class="flex justify-between border-b pb-3 border-gray-5 mb-3 mr-24">
+        <span class="text-body-md !font-bold">Scooter ID</span>
+        <span class="text-body-md !font-bold">Pickup location</span>
+        <span class="text-body-md !font-bold">Dropoff location</span>
+        <span class="text-body-md !font-bold">Duration</span>
+        <span class="text-body-md !font-bold">Price</span>
+        <span class="text-body-md !font-bold">Time created</span>
+      </div>
+      {%for booking in currentBookings%}
+      <div class="py-3 flex justify-between items-center">
+        <div class="flex justify-between w-full">
+          <span class="text-body-md">{{booking.scooter_id}}</span>
+          <span class="text-body-md">{{booking.pickupLoc.name}}</span>
+          <span class="text-body-md">{{booking.dropoffLoc.name}}</span>
+          <span class="text-body-md"><p>{{booking.length}} hours</p></span>
+          <span class="text-body-md"><p>£{{booking.price}}</p></span>
+          <span class="text-body-md">{{booking.time_created}}</span>
+        </div>
+        <div
+          class="py-2 px-4 bg-red-500 rounded-lg text-white ml-4 cursor-pointer hover:bg-red-400 cancelButton"
+          id="{{booking.id}}"
+        >
+          Cancel
+        </div>
+      </div>
+      {%endfor%}
+    </div>
+  </div>
+  <span class="text-h6 mt-10">Previous bookings</span>
+  <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6 flex flex-col">
+    <div class="flex justify-between border-b pb-3 border-gray-5 mb-3">
+      <span class="text-body-md !font-bold">Scooter ID</span>
+      <span class="text-body-md !font-bold">Pickup location</span>
+      <span class="text-body-md !font-bold">Dropoff location</span>
+      <span class="text-body-md !font-bold">Duration</span>
+      <span class="text-body-md !font-bold">Price</span>
+      <span class="text-body-md !font-bold">Time created</span>
+    </div>
+    {%for booking in bookings%}
+    <div class="py-3 flex justify-between">
+      <span class="text-body-md">{{booking.scooter_id}}</span>
+      <span class="text-body-md">{{booking.pickupLoc.name}}</span>
+      <span class="text-body-md">{{booking.dropoffLoc.name}}</span>
+      <span class="text-body-md"><p>{{booking.length}} hours</p></span>
+      <span class="text-body-md"><p>£{{booking.price}}</p></span>
+      <span class="text-body-md">{{booking.time_created}}</span>
+    </div>
+    {%endfor%}
+  </div>
 </div>
+<script>
+  const cancelButtons = document.getElementsByClassName("cancelButton");
+
+  const arr = Array.prototype.slice.call(cancelButtons);
+
+  arr.map((button) => {
+    button.addEventListener("click", function (e) {
+      $.ajax({
+        url: `/api/cancelBooking?bookingId=${button.id}`,
+      }).done(() => {
+        location.reload();
+      });
+    });
+  });
+</script>
 {% endblock %}

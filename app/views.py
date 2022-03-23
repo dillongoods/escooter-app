@@ -59,6 +59,7 @@ def mapBookingToBookingViewModel(b):
 
     return models.BookingViewModel(b, pickupLocation, dropoffLocation)
 
+
 @app.route('/account', methods=['GET'])
 @auth_required()
 def my_account():
@@ -71,11 +72,16 @@ def my_account():
     details = models.BankDetails.query.filter_by(
         id=user.bank_details_id).first()
 
-    bookings = models.Booking.query.filter_by(user_id=current_user.id)
+    pastBookings = models.Booking.query.filter_by(user_id=current_user.id)
 
-    booking_view_models = map(mapBookingToBookingViewModel, bookings)
+    currentBookings = models.Booking.query.filter_by(
+        user_id=current_user.id, is_active=True).all()
 
-    return render_template_auth('my_account.html', title='My Account', user=user, card_details=details, bookings=booking_view_models)
+    currentBookingsModels = map(mapBookingToBookingViewModel, currentBookings)
+
+    booking_view_models = map(mapBookingToBookingViewModel, pastBookings)
+
+    return render_template_auth('my_account.html', title='My Account', user=user, card_details=details, bookings=booking_view_models, currentBookings=currentBookingsModels)
 
 
 @app.route('/account/bank_details', methods=['GET', 'POST'])
@@ -287,5 +293,26 @@ def addScooterToLocation():
 
     db.session.add(newScooter)
     db.session.commit()
+
+    return '200'
+
+
+# Cancel booking
+
+@app.route('/api/cancelBooking')
+def cancelBooking():
+    bookingId = request.args.get('bookingId')
+
+    booking = models.Booking.query.filter_by(id=bookingId).first()
+
+    if (booking.is_active == True):
+        scooter = models.Scooter.query.filter_by(id=booking.scooter_id).first()
+
+        scooter.availability = True
+        booking.is_active = False
+
+        db.session.commit()
+
+        return '200'
 
     return '200'
