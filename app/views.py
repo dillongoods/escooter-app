@@ -1,7 +1,7 @@
 from flask import session, render_template, request, redirect, flash, json
 from app import app, models, db
 from flask_security import current_user, logout_user, auth_required, roles_required
-from .forms import StoreCardDetailsForm, CreateBookingForm, LocationForm
+from .forms import CancelForm, StoreCardDetailsForm, CreateBookingForm, LocationForm
 import datetime
 
 HIRE_CHOICES = [('1', '1 hr'), ('2', '4 hrs'), ('3', '1 day'), ('4', '1 week')]
@@ -18,7 +18,7 @@ def end_active_bookings():
         if item.time_created.timestamp() + durationInSeconds < now:
             scooter = models.Scooter.query.filter_by(
                 id=item.scooter_id).first()
-
+            scooter.location_id = item.dropoff
             scooter.availability = True
             item.is_active = False
 
@@ -59,11 +59,21 @@ def mapBookingToBookingViewModel(b):
 
     return models.BookingViewModel(b, pickupLocation, dropoffLocation)
 
-@app.route('/account', methods=['GET'])
+@app.route('/account', methods=['GET', 'POST'])
 @auth_required()
 def my_account():
     end_active_bookings()
     # for users to view their account details
+    form = CancelForm()
+
+    if request.method=='POST':
+        booking = models.Booking.query.filter_by(id=form.id.data).first()
+        selectedScooter = models.Scooter.query.filter_by(id=booking.scooter_id).first()
+        models.Booking.query.filter_by(id=form.id.data).delete()
+        selectedScooter.availability = True
+        db.session.commit()
+        db.session.flush()
+
 
     user_email = current_user.email
 
@@ -71,11 +81,14 @@ def my_account():
     details = models.BankDetails.query.filter_by(
         id=user.bank_details_id).first()
 
-    bookings = models.Booking.query.filter_by(user_id=current_user.id)
+    a_bookings = models.Booking.query.filter_by(user_id=current_user.id, is_active=True)
+    active_bookings = map(mapBookingToBookingViewModel, a_bookings)
 
-    booking_view_models = map(mapBookingToBookingViewModel, bookings)
+    p_bookings = models.Booking.query.filter_by(user_id=current_user.id, is_active=False)
+    previous_bookings = map(mapBookingToBookingViewModel, p_bookings)
 
-    return render_template_auth('my_account.html', title='My Account', user=user, card_details=details, bookings=booking_view_models)
+
+    return render_template_auth('my_account.html', title='My Account', user=user, card_details=details, active_bookings=active_bookings, previous_bookings=previous_bookings, form=form)
 
 
 @app.route('/account/bank_details', methods=['GET', 'POST'])
@@ -177,6 +190,7 @@ def performHire():
 
     selectedScooter = models.Scooter.query.filter_by(id=scooterId).first()
     selectedScooter.availability = False
+
 
     db.session.add(booking)
     db.session.commit()

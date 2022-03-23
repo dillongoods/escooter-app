@@ -49,3 +49,6 @@ class LocationForm(FlaskForm):
     name = StringField('name',  validators=[DataRequired()])
     x_cord = StringField('x_cord',  validators=[DataRequired()])
     y_cord = StringField('y_cord',  validators=[DataRequired()])
+
+class CancelForm(FlaskForm):
+	id = StringField('id')

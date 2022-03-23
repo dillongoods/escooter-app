@@ -19,9 +19,36 @@
       </div>
     </div>
     <span class="text-h6">Previous bookings</span>
-    {%for booking in bookings%}
-
-
+    {%for booking in previous_bookings%}
+    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6 mb-3">
+      <div class="flex justify-between">
+        <span class="text-body-md !font-bold">Scooter id:</span>
+        <span class="text-body-md">{{booking.scooter_id}}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-body-md !font-bold">Pickup location:</span>
+        <span class="text-body-md">{{booking.pickupLoc.name}}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-body-md !font-bold">Dropoff location:</span>
+        <span class="text-body-md">{{booking.dropoffLoc.name}}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-body-md !font-bold">Duration:</span>
+        <span class="text-body-md"><p>{{booking.length}} hours</p></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-body-md !font-bold">Price:</span>
+        <span class="text-body-md"><p>£{{booking.price}}</p></span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-body-md !font-bold">Time created:</span>
+        <span class="text-body-md">{{booking.time_created}}</span>
+      </div>
+    </div>
+    {%endfor%}
+    <span class="text-h6">Active bookings</span>
+    {%for booking in active_bookings%}
     <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
       <div class="flex justify-between">
         <span class="text-body-md !font-bold">Scooter id:</span>
@@ -47,6 +74,12 @@
         <span class="text-body-md !font-bold">Time created:</span>
         <span class="text-body-md">{{booking.time_created}}</span>
       </div>
+      <!-- <p>Cancel booking:</p> -->
+      <form method="post" name="cancelBooking">
+          {{form.hidden_tag()}}
+          {{ form.id(class="d-none", value=booking.id)}}
+          <input type="submit" value="Cancel">
+        </form>
     </div>
     {%endfor%}
 
