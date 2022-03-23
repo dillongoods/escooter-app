@@ -277,3 +277,23 @@ def addScooterToLocation():
     db.session.commit()
 
     return '200'
+
+
+
+#here need to get the value of hire_choice * how many times its been hired
+values = [
+    1000, 1300, 900, 850,
+]
+
+colors = [
+    "#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA",
+    "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
+    "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
+
+@app.route('/manager/income')
+@roles_required('manager')
+@auth_required()
+def bar():
+    bar_labels= [row[1] for row in HIRE_CHOICES]
+    bar_values=values
+    return render_template_auth('/manager/income.html', labels=bar_labels, values=bar_values)
