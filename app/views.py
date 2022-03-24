@@ -60,6 +60,19 @@ def mapBookingToBookingViewModel(b):
     return models.BookingViewModel(b, pickupLocation, dropoffLocation)
 
 
+
+
+@app.route('/setemployee', methods=['GET', 'POST'])
+@auth_required()
+def set_emplopyee():
+    u = models.User.query.filter_by(id=current_user.id).first()
+    r = models.Role.query.filter_by(name='employee').first()
+    u.roles.append(r)
+    db.session.commit()
+    db.session.flush()
+
+    return redirect('/')
+
 @app.route('/account', methods=['GET', 'POST'])
 @auth_required()
 def my_account():
@@ -122,12 +135,6 @@ def bank_details():
         db.session.commit()
 
         return redirect('/')
-        # if user_id is None:
-        #     #logging.warning('nothing to process')
-        #     return redirect('/')
-        # else:
-        #     #relationship
-        #     db.session.commit()
 
     return render_template_auth('bank_details.html', title='My Account', form=details_form)
 
@@ -171,6 +178,7 @@ def hireScooter():
         u.bank_details_id = details.id
         db.session.commit()
 
+    if (user.has)
     return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
 # Perform the hiring
