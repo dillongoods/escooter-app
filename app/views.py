@@ -178,7 +178,6 @@ def hireScooter():
         u.bank_details_id = details.id
         db.session.commit()
 
-    if (user.has)
     return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
 # Perform the hiring
