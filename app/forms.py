@@ -16,6 +16,7 @@ class RegistrationForm(RegisterForm):
     last_name = StringField('Last name')
     dob = DateField('Date of Birth')
 
+
 class StoreCardDetailsForm(FlaskForm):
     id = StringField('id')
     name = StringField('name', validators=[DataRequired()])

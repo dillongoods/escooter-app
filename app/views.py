@@ -1,8 +1,9 @@
 from flask import session, render_template, request, redirect, flash, json
 from app import app, models, db
 from flask_security import current_user, logout_user, auth_required, roles_required
-from .forms import CancelForm, StoreCardDetailsForm, CreateBookingForm, LocationForm
+from .forms import CancelForm, StoreCardDetailsForm, CreateBookingForm, LocationForm, RegistrationForm
 import datetime
+from .setup import user_datastore
 
 HIRE_CHOICES = [('1', '1 hr'), ('2', '4 hrs'), ('3', '1 day'), ('4', '1 week')]
 
@@ -238,6 +239,10 @@ def manager():
     end_active_bookings()
     allLocations = models.Location.query.all()
     allScooters = models.Scooter.query.all()
+    employeeRole = models.Role.query.filter_by(name='employee').first()
+
+    employees = [u for u in models.User.query.all() if employeeRole in u.roles]
+    
 
     bar_labels = [row[1] for row in HIRE_CHOICES]
 
@@ -249,7 +254,30 @@ def manager():
     values = [oneHourCombinedIncome,
               fourHoursCombinedIncome, dayCombinedIncome, weekCombinedIncome]
 
-    return render_template_auth('manager/index.html', locations=allLocations, Scooters=allScooters, labels=bar_labels, values=values)
+    return render_template_auth('manager/index.html', locations=allLocations, Scooters=allScooters, labels=bar_labels, values=values, employees=employees)
+
+@app.route('/manager/add-employee', methods=['GET', 'POST'])
+@roles_required('manager')
+@auth_required()
+def managerAddEmployee():
+    end_active_bookings()
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        user_datastore.create_user(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            dob=form.dob.data,
+            email=form.email.data,
+            password=form.password.data, 
+            roles=["employee"])
+
+        db.session.commit()
+        db.session.flush()
+        
+        return redirect('/')
+    
+    return render_template_auth('manager/add_employee.html', register_user_form=form)
 
 
 @app.route('/manager/add-location', methods=['GET', 'POST'])

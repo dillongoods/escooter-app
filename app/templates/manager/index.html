@@ -61,6 +61,31 @@
         </div>
       </div>
     </div>
+    <div class="flex-1">
+      <span class="text-h6">Employees</span>
+      <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
+        <div class="flex flex-col">
+          <!--show current employees (employees instead of locations)--> 
+          {% if employees|length == 0 %}
+          <span class="text-center text-body-lg text-gray-500 my-8"
+            >It appears there are no employees yet. You can add them now</span
+          >
+          {% else %} {% for employee in employees %}
+          <div class="mb-3 py-2 flex justify-between">
+            <span><p>{{employee.last_name}}, {{employee.first_name}}</p></span>
+            <span>
+            </span>
+          </div>
+          {% endfor %} {% endif %}
+          <div class="w-full h-px bg-gray-100 mb-6"></div>
+          <a
+            href="/manager/add-employee"
+            class="p-3 w-1/2 border border-gray-800 text-h4 rounded-lg border-2 text-center hover:bg-gray-100 mr-0 ml-auto"
+            >Add Employee</a
+          >
+        </div>
+      </div>
+    </div>
   </div>
   <div class="flex-1 my-10">
     <span class="text-h6"> Income </span></br>
