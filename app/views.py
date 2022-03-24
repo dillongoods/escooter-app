@@ -59,6 +59,7 @@ def mapBookingToBookingViewModel(b):
 
     return models.BookingViewModel(b, pickupLocation, dropoffLocation)
 
+
 @app.route('/account', methods=['GET', 'POST'])
 @auth_required()
 def my_account():
@@ -66,14 +67,14 @@ def my_account():
     # for users to view their account details
     form = CancelForm()
 
-    if request.method=='POST':
+    if request.method == 'POST':
         booking = models.Booking.query.filter_by(id=form.id.data).first()
-        selectedScooter = models.Scooter.query.filter_by(id=booking.scooter_id).first()
+        selectedScooter = models.Scooter.query.filter_by(
+            id=booking.scooter_id).first()
         models.Booking.query.filter_by(id=form.id.data).delete()
         selectedScooter.availability = True
         db.session.commit()
         db.session.flush()
-
 
     user_email = current_user.email
 
@@ -81,12 +82,13 @@ def my_account():
     details = models.BankDetails.query.filter_by(
         id=user.bank_details_id).first()
 
-    a_bookings = models.Booking.query.filter_by(user_id=current_user.id, is_active=True)
+    a_bookings = models.Booking.query.filter_by(
+        user_id=current_user.id, is_active=True)
     active_bookings = map(mapBookingToBookingViewModel, a_bookings)
 
-    p_bookings = models.Booking.query.filter_by(user_id=current_user.id, is_active=False)
+    p_bookings = models.Booking.query.filter_by(
+        user_id=current_user.id, is_active=False)
     previous_bookings = map(mapBookingToBookingViewModel, p_bookings)
-
 
     return render_template_auth('my_account.html', title='My Account', user=user, card_details=details, active_bookings=active_bookings, previous_bookings=previous_bookings, form=form)
 
@@ -191,7 +193,6 @@ def performHire():
     selectedScooter = models.Scooter.query.filter_by(id=scooterId).first()
     selectedScooter.availability = False
 
-
     db.session.add(booking)
     db.session.commit()
     db.session.flush()
@@ -229,10 +230,19 @@ def confirmHire():
 def manager():
     end_active_bookings()
     allLocations = models.Location.query.all()
-
     allScooters = models.Scooter.query.all()
 
-    return render_template_auth('manager/index.html', locations=allLocations, Scooters=allScooters)
+    bar_labels = [row[1] for row in HIRE_CHOICES]
+
+    oneHourCombinedIncome = getWeekOneHourIncome()
+    fourHoursCombinedIncome = getWeekFourHoursIncome()
+    dayCombinedIncome = getWeekDayIncome()
+    weekCombinedIncome = getWeekWeekIncome()
+
+    values = [oneHourCombinedIncome,
+              fourHoursCombinedIncome, dayCombinedIncome, weekCombinedIncome]
+
+    return render_template_auth('manager/index.html', locations=allLocations, Scooters=allScooters, labels=bar_labels, values=values)
 
 
 @app.route('/manager/add-location', methods=['GET', 'POST'])
@@ -305,21 +315,47 @@ def addScooterToLocation():
     return '200'
 
 
+def getWeekAgoTimestamp():
+    now = datetime.datetime.now().timestamp()
+    weekInSeconds = 168 * 3600
 
-#here need to get the value of hire_choice * how many times its been hired
-values = [
-    1000, 1300, 900, 850,
-]
+    return now - weekInSeconds
 
-colors = [
-    "#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA",
-    "#ABCDEF", "#DDDDDD", "#ABCABC", "#4169E1",
-    "#C71585", "#FF4500", "#FEDCBA", "#46BFBD"]
 
-@app.route('/manager/income')
-@roles_required('manager')
-@auth_required()
-def bar():
-    bar_labels= [row[1] for row in HIRE_CHOICES]
-    bar_values=values
-    return render_template_auth('/manager/income.html', labels=bar_labels, values=bar_values)
+def sumPrice(bookings):
+    weekAgo = getWeekAgoTimestamp()
+    oneHourPrice = 0
+
+    for item in bookings:
+        if item.time_created.timestamp() > weekAgo:
+            oneHourPrice += int(item.price)
+
+    return oneHourPrice
+
+
+def getWeekOneHourIncome():
+    bookingsOneHour = models.Booking.query.filter_by(
+        is_active=False, length=1).all()
+
+    return sumPrice(bookingsOneHour)
+
+
+def getWeekFourHoursIncome():
+    bookingsFourHours = models.Booking.query.filter_by(
+        is_active=False, length=4).all()
+
+    return sumPrice(bookingsFourHours)
+
+
+def getWeekDayIncome():
+    bookingsOneDay = models.Booking.query.filter_by(
+        is_active=False, length=24).all()
+
+    return sumPrice(bookingsOneDay)
+
+
+def getWeekWeekIncome():
+    bookingsOneWeek = models.Booking.query.filter_by(
+        is_active=False, length=168).all()
+
+    return sumPrice(bookingsOneWeek)

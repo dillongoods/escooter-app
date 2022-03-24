@@ -1,75 +1,77 @@
 {% extends "base/index.html" %} {% block content %}
-<div class="w-full mt-10 flex w-full gap-6">
-  <div class="flex-1">
-    <span class="text-h6">Scooters</span>
-    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
-      <div class="overflow-y-auto max-h-[400px]">
-        {% if Scooters|length == 0 %}
-        <span class="text-center text-body-lg text-gray-500 my-8"
-          >It appears there are no scooters yet. You can add them now</span
-        >
-        {% else %} {% for scooter in Scooters %}
-        <div class="mb-3 py-2 flex items-center flex-1">
-          <img
-            class="h-10 w-10 mr-4 object-cover float-left"
-            src="static/favicon.ico"
-            alt="small scooter icon"
-          />
-          <div class="flex flex-col w-full">
-            <div class="flex justify-between w-full">
-              <span>Scooter ID: {{scooter.id}}</span><br/>
-              <span class="mr-4">Location: {{scooter.location_id}}</span>
+<div class="w-full mt-10 flex flex-col">
+  <div class="flex gap-6">
+    <div class="flex-1">
+      <span class="text-h6">Scooters</span>
+      <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
+        <div class="overflow-y-auto max-h-[400px]">
+          {% if Scooters|length == 0 %}
+          <span class="text-center text-body-lg text-gray-500 my-8"
+            >It appears there are no scooters yet. You can add them now</span
+          >
+          {% else %} {% for scooter in Scooters %}
+          <div class="mb-3 py-2 flex items-center flex-1">
+            <img
+              class="h-10 w-10 mr-4 object-cover float-left"
+              src="static/favicon.ico"
+              alt="small scooter icon"
+            />
+            <div class="flex flex-col w-full">
+              <div class="flex justify-between w-full">
+                <span>Scooter ID: {{scooter.id}}</span><br />
+                <span class="mr-4">Location: {{scooter.location_id}}</span>
+              </div>
+              <p class="flex justify-between">
+                {% if scooter.availability == True %}
+                <span class="text-green-600">Available: Yes &#10003;</span>
+                {% else %}
+                <span class="text-red-600">Available: No &#10007;</span>
+                {% endif %}
+              </p>
             </div>
-            <p class="flex justify-between">
-              {% if scooter.availability == True %}
-              <span class="text-green-600">Available: Yes &#10003;</span>
-              {% else %}
-              <span class="text-red-600">Available: No &#10007;</span>
-              {% endif %}
-            </p>
           </div>
+          {% endfor %} {% endif %}
         </div>
-        {% endfor %} {% endif %}
       </div>
     </div>
-  </div>
-  <div class="flex-1">
-    <span class="text-h6">Locations</span>
-    <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
-      <div class="flex flex-col">
-        {% if locations|length == 0 %}
-        <span class="text-center text-body-lg text-gray-500 my-8"
-          >It appears there are no locations yet. You can add them now</span
-        >
-        {% else %} {% for location in locations %}
-        <div class="mb-3 py-2 flex justify-between">
-          <span>{{location.name}}</span>
-          <span
-            id="{{location.id}}"
-            class="addButton cursor-pointer text-green-600"
-            >Add scooter</span
+    <div class="flex-1">
+      <span class="text-h6">Locations</span>
+      <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
+        <div class="flex flex-col">
+          {% if locations|length == 0 %}
+          <span class="text-center text-body-lg text-gray-500 my-8"
+            >It appears there are no locations yet. You can add them now</span
+          >
+          {% else %} {% for location in locations %}
+          <div class="mb-3 py-2 flex justify-between">
+            <span>{{location.name}}</span>
+            <span
+              id="{{location.id}}"
+              class="addButton cursor-pointer text-green-600"
+              >Add scooter</span
+            >
+          </div>
+          {% endfor %} {% endif %}
+          <div class="w-full h-px bg-gray-100 mb-6"></div>
+          <a
+            href="/manager/add-location"
+            class="p-3 w-1/2 border border-gray-800 text-h4 rounded-lg border-2 text-center hover:bg-gray-100 mr-0 ml-auto"
+            >Add location</a
           >
         </div>
-        {% endfor %} {% endif %}
-        <div class="w-full h-px bg-gray-100 mb-6"></div>
-        <a
-          href="/manager/add-location"
-          class="p-3 w-1/2 border border-gray-800 text-h4 rounded-lg border-2 text-center hover:bg-gray-100 mr-0 ml-auto"
-          >Add location</a
-        >
       </div>
-      </div>
-       <div class="w-fit h-px bg-gray-100 mb-6"></div>
-        <a
-          href="/manager/income"
-          class="p-3 float-right border-gray-800 text-h4 rounded-lg border-2 text-center hover:bg-gray-100"
-          >Access income</a
-        >
-        </div>
     </div>
   </div>
+  <div class="flex-1 my-10">
+    <span class="text-h6"> Income </span></br>
+        <div class="mt-4 bg-white drop-shadow-md rounded-xl p-6">
+           <span class="font-semibold"> Weekly Income</span>
+           <br/>
+           <br/>
+            <canvas id="chart" width="1000" height="400"></canvas>
+        </div>
+    </div>
 </div>
-
 
 <script>
   const allButtons = document.getElementsByClassName("addButton");
@@ -82,5 +84,63 @@
       }).done();
     });
   });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script>
+  var ctx = document.getElementById("chart").getContext('2d');
+
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [
+      {% for item in labels %}
+       "{{ item }}",
+      {% endfor %}
+      ],
+         datasets: [{
+        backgroundColor: [
+          "#5dade2",
+          "#a569bd",
+          "#ec7063",
+          "#a5754a"
+        ],
+        data: [
+        {% for item in values %}
+           "{{ item }}",
+          {% endfor %}
+      ]          
+      },]
+    },
+    options : {
+        legend: {
+            display: false
+    },
+      scales: {
+        xAxes: [ {
+          scaleLabel: {
+            display: true,
+            labelString: 'Hire Choice'
+          },
+          ticks: {
+            major: {
+              fontStyle: 'bold',
+              fontColor: '#FF0000'
+            }
+          }
+        } ],
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Income (£)'
+          },
+          ticks: {
+              beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+            
 </script>
 {% endblock %}
