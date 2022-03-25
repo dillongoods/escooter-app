@@ -49,7 +49,7 @@ def index():
     if current_user.has_role('manager'):
         return redirect('/manager')
 
-    return render_template_auth('index.html')
+    return render_template_auth('index.html', isEmployee=current_user.has_role('employee'))
 
 
 def mapBookingToBookingViewModel(b):
@@ -139,6 +139,28 @@ def bank_details():
 
     return render_template_auth('bank_details.html', title='My Account', form=details_form)
 
+# Hire a scooter
+@app.route('/employee/hireScooter', methods=['GET', 'POST'])
+def employeeHireScooter():
+
+    end_active_bookings()
+    locationName = request.args.get('location')
+    scooterId = request.args.get('scooterId')
+
+    allLocations = models.Location.query.all()
+    location = models.Location.query.filter_by(name=locationName).first()
+    scooter = models.Scooter.query.filter_by(id=scooterId).first()
+
+    if scooter.availability == False:
+        return redirect('/')
+
+    #user_email = current_user.email
+    #user = models.User.query.filter_by(email=user_email).first()
+    
+    details_form = StoreCardDetailsForm() #
+
+    return render_template_auth('employee/hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, details_form=details_form)
+
 
 # Hire a scooter
 @app.route('/hireScooter', methods=['GET', 'POST'])
@@ -156,11 +178,8 @@ def hireScooter():
 
     user_email = current_user.email
     user = models.User.query.filter_by(email=user_email).first()
-    details = models.BankDetails.query.filter_by(
-        id=user.bank_details_id).first()
+    
     details_form = StoreCardDetailsForm()
-
-    accountNo = str(details.accountNo)[-4:] if details else None
 
     if details_form.validate_on_submit():
         details = models.BankDetails(
@@ -179,23 +198,31 @@ def hireScooter():
         u.bank_details_id = details.id
         db.session.commit()
 
+    details = models.BankDetails.query.filter_by(
+        id=user.bank_details_id).first()
+
+    accountNo = str(details.accountNo)[-4:] if details else None
+
     return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
-# Perform the hiring
 
-
-@app.route('/performHire')
+@app.route('/performHire', methods=['GET'])
 def performHire():
     pickupLocationId = int(request.args.get('pickupLocationId'))
     dropoffLocationName = request.args.get('dropoffLocationName')
     durationInHours = int(request.args.get('durationInHours'))
     cost = int(request.args.get('cost'))
     scooterId = int(request.args.get('scooterId'))
+    customerEmail = request.args.get('email')
 
     dropoffLocation = models.Location.query.filter_by(
         name=dropoffLocationName).first()
 
-    booking = models.Booking(user_id=current_user.id, scooter_id=scooterId, price=cost,
+    if current_user.has_role('employee'):
+        booking = models.Booking(user_id=current_user.id, user_email=customerEmail, scooter_id=scooterId, price=cost,
+                             length=durationInHours, pickup=pickupLocationId, dropoff=dropoffLocation.id)
+    else:    
+        booking = models.Booking(user_id=current_user.id, scooter_id=scooterId, price=cost,
                              length=durationInHours, pickup=pickupLocationId, dropoff=dropoffLocation.id)
 
     selectedScooter = models.Scooter.query.filter_by(id=scooterId).first()
@@ -208,13 +235,17 @@ def performHire():
     return '200'
 
 
-@app.route('/confirmHire')
+
+
+@app.route('/confirmHire', methods=['GET'])
 def confirmHire():
     pickupLocationId = int(request.args.get('pickupLocationId'))
     dropoffLocationName = request.args.get('dropoffLocationName')
     durationInHours = int(request.args.get('durationInHours'))
     cost = int(request.args.get('cost'))
     scooterId = int(request.args.get('scooterId'))
+    customerEmail = request.args.get('email')
+    guestBank = request.args.get('guestBank')
 
     selectedScooter = models.Scooter.query.filter_by(id=scooterId).first()
 
@@ -225,9 +256,13 @@ def confirmHire():
     bankDetails = models.BankDetails.query.filter_by(
         id=user.bank_details_id).first()
 
-    accountNo = str(bankDetails.accountNo)[-4:] if bankDetails else None
 
-    return render_template_auth('confirmHire.html', scooter=selectedScooter, pickupLocationName=pickupLocation.name, dropoffLocationName=dropoffLocationName, cost=cost, durationInHours=durationInHours, accountNo=accountNo)
+    if bankDetails:
+        accountNo = str(bankDetails.accountNo)[-4:]
+    else:
+         accountNo = str(guestBank)[-4:]
+
+    return render_template_auth('confirmHire.html', email=customerEmail, scooter=selectedScooter, pickupLocationName=pickupLocation.name, dropoffLocationName=dropoffLocationName, cost=cost, durationInHours=durationInHours, accountNo=accountNo)
 
 # Manager Page
 

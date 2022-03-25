@@ -60,16 +60,17 @@
           <div class="flex">
             <span class="font-bold">£</span>
             <span id="cost" class="font-bold">4</span>
+            <!-- <span class="font-bold">£</span> -->
           </div>
         </div>
       </div>
     </div>
-    {% if isEmployee %}
-    
-    {% endif %}
-    {% if not has_card_details %}
     <form action="" method="post" name="bankDetails">
       {{ details_form.hidden_tag() }}
+      <div class="mb-6 mt-8">
+        <label class="mb-2">Email address</label>
+        <input class="t-2 w-full p-3 rounded-lg border" type="email" id="customerEmail" name="name" required>
+      </div>
       <div class="mb-6 mt-8">
         <label class="mb-2">Name on card</label> {{
         details_form.name(class_='mt-2 w-full p-3 rounded-lg border
@@ -81,7 +82,7 @@
       <div class="mb-6">
         <label class="mb-2">Account number</label> {{
         details_form.accountNo(class_='mt-2 w-full p-3 rounded-lg border
-        border-black', placeholder_="Number") }} {% for error in
+        border-black', placeholder_="Number", id_="guestBankDetails") }} {% for error in
         details_form.accountNo.errors %}
         <div class="alert alert-danger w-100" role="alert">[{{ error }}]</div>
         {% endfor %}
@@ -111,21 +112,8 @@
           {% endfor %}
         </div>
       </div>
-      <input
-        type="submit"
-        class="w-full bg-green-600 text-white text-h4 py-3 rounded-lg cursor-pointer mt-4"
-        value="Use this card"
-      />
       <div class="w-full h-px bg-gray-200 my-8"></div>
     </form>
-    {%else%}
-    <div class="mt-6 flex justify-between">
-      <div class="flex items-center my-4 ml-4">
-        <input type="checkbox" class="mr-3" id="useCard" />
-        <span>Use card ending: ***{{accountNo}}</span>
-      </div>
-    </div>
-    {%endif%}
     <div class="mt-6 flex justify-between">
       <div class="flex items-center my-4 ml-4">
         <input type="checkbox" class="mr-3" id="acceptToc" />
@@ -162,7 +150,6 @@
       }
     });
 
-    const cardBox = document.getElementById("useCard");
     const checkBox = document.getElementById("acceptToc");
     const submitButton = document.getElementById("submitButton");
     const locationSelect = document.getElementById("locationSelect");
@@ -170,19 +157,13 @@
     const pickupLocationId = document.getElementById("pickupLocationId");
     const durationSelect = document.getElementById("durationSelect");
     const scooterIdSpan = document.getElementById("scooterIdSpan");
+    const customerEmail = document.getElementById("customerEmail");
+    const guestBank = document.getElementById("guestBankDetails");
 
     submitButton.disabled = true;
 
-    cardBox.addEventListener("click", () => {
-      if (cardBox.checked && checkBox.checked) {
-        submitButton.disabled = false;
-      } else {
-        submitButton.disabled = true;
-      }
-    });
-
     checkBox.addEventListener("click", () => {
-      if (checkBox.checked && cardBox.checked) {
+      if (checkBox.checked) {
         submitButton.disabled = false;
       } else {
         submitButton.disabled = true;
@@ -208,16 +189,18 @@
 
     submitButton.addEventListener("click", () => {
       const pickupLocationIdValue = pickupLocationId.innerHTML;
+      const customerEmailValue = customerEmail.value;
       const dropOffLocationName = locationSelect.value;
       const cost = costDisplay.innerText;
       const scooterId = scooterIdSpan.innerHTML;
+      const guestBankDetails = guestBank.value;
 
       const durationInHours = getHoursValueFromCost(costDisplay.innerText);
 
       $.ajax({
-        url: `/performHire?pickupLocationId=${pickupLocationIdValue}&dropoffLocationName=${dropOffLocationName}&durationInHours=${durationInHours}&cost=${cost}&scooterId=${scooterId}`,
+        url: `/performHire?email=${customerEmailValue}&pickupLocationId=${pickupLocationIdValue}&dropoffLocationName=${dropOffLocationName}&durationInHours=${durationInHours}&cost=${cost}&scooterId=${scooterId}`,
       }).done(() => {
-        window.location.href = `/confirmHire?pickupLocationId=${pickupLocationIdValue}&dropoffLocationName=${dropOffLocationName}&durationInHours=${durationInHours}&cost=${cost}&scooterId=${scooterId}`;
+        window.location.href = `/confirmHire?email=${customerEmailValue}&guestBank=${guestBankDetails}&pickupLocationId=${pickupLocationIdValue}&dropoffLocationName=${dropOffLocationName}&durationInHours=${durationInHours}&cost=${cost}&scooterId=${scooterId}`;
       });
     });
   </script>

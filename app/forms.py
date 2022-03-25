@@ -35,6 +35,7 @@ class CreateBookingForm(FlaskForm):
     pickupLoc = SelectField(
         u'Pickup location', choices=LOCATION_CHOICES, validators=[DataRequired()])
     dropOffLoc = SelectField(u'Dropoff location', choices=LOCATION_CHOICES)
+    email = StringField('Email Address', validators=[DataRequired()])
 
 
 class FeedbackForm(FlaskForm):
