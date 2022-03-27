@@ -124,7 +124,11 @@
 
               // add on click listener to send request to backend
               scooterDiv.addEventListener("click", () => {
+                {% if isEmployee %}
+                window.location.href = `/employee/hireScooter?location=${marker.title}&scooterId=${scooter.id}`;
+                {% else %}
                 window.location.href = `/hireScooter?location=${marker.title}&scooterId=${scooter.id}`;
+                {% endif %}
               });
 
               scooterContainer.className =

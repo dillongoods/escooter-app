@@ -45,6 +45,7 @@ class Booking(db.Model, Serializer):
     __tablename__ = 'bookings'
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column('user_id', db.Integer(), db.ForeignKey('users.id'))
+    user_email = db.Column('user_email', db.String(255), nullable=True)
     scooter_id = db.Column('scooter_id', db.Integer(),
                            db.ForeignKey('scooters.id'))
     price = db.Column(db.String(255))

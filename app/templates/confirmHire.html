@@ -19,6 +19,12 @@
       </div>
     </div>
     <div class="mt-4">
+      {% if email %}
+      <div class="flex w-full justify-between items-center py-3">
+        <span class="text-h4">Email</span>
+        <span class="text-body-lg">{{email}}</span>
+      </div>
+      {%endif%}
       <div class="flex w-full justify-between items-center py-3">
         <span class="text-h4">Pickup</span>
         <span class="text-body-lg">{{pickupLocationName}}</span>
@@ -37,7 +43,7 @@
       </div>
       <div class="flex w-full justify-between items-center py-3">
         <span class="text-h4">Cost</span>
-        <span class="text-body-lg">{{cost}} £</span>
+        <span class="text-body-lg">£ {{cost}}</span>
       </div>
       <div class="flex w-full justify-between items-center py-3">
         <span class="text-h4">Paid with</span>

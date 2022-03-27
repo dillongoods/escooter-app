@@ -64,6 +64,9 @@
         </div>
       </div>
     </div>
+    {% if isEmployee %}
+    
+    {% endif %}
     {% if not has_card_details %}
     <form action="" method="post" name="bankDetails">
       {{ details_form.hidden_tag() }}
