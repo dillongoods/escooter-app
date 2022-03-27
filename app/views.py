@@ -220,10 +220,18 @@ def hireScooter():
         id=user.bank_details_id).first()
 
     accountNo = str(details.accountNo)[-4:] if details else None
+<<<<<<< HEAD
+=======
+
+    return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
+>>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
 
     return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
 @app.route('/performHire', methods=['GET'])
 def performHire():
     pickupLocationId = int(request.args.get('pickupLocationId'))
