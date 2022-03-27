@@ -1,0 +1,26 @@
+{% extends "base/index.html" %} {% block content %}
+
+<div class="w-[392px] mx-auto flex flex-col h-full justify-center">
+  <span class="text-h6">Add card details</span>
+  <div class="drop-shadow-md bg-white rounded-xl mt-4 p-6">
+    <form action="" method="post" name="bankDetails">
+      <div class="mb-3">
+        <label class="mb-2">List issue(s)</label> {{ issue.complaint(class_='mt-2
+        w-full p-3 rounded-lg border border-black', placeholder_="Type here") }}
+        <div class="alert alert-danger w-100" role="alert"></div>
+
+      <div class="w-full h-px bg-gray-200 my-8"></div>
+      <div class="w-full flex">
+        <a class="p-3 w-full text-h4 rounded-lg text-center" href="/account"
+          >Go back</a
+        >
+        <input
+          type="submit"
+          class="w-full bg-green-600 text-white text-h4 py-2 rounded-lg cursor-pointer ml-4"
+          value="Add"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
