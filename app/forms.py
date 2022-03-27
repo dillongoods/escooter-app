@@ -45,6 +45,10 @@ class FeedbackForm(FlaskForm):
     priority = SelectField(
         'priority', choices=PRIORITY_CHOICES, validators=[DataRequired()])
 
+class IssueForm(FlaskForm):
+    id = StringField('id')
+    complaint = StringField('complaint', validators=[DataRequired()])
+
 class LocationForm(FlaskForm):
     id = StringField('id')
     name = StringField('name',  validators=[DataRequired()])
