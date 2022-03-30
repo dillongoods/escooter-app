@@ -98,6 +98,12 @@ class Review(db.Model):
     message = db.Column(db.String(1000))
     priority = db.Column(db.Integer())
 
+class Issue(db.Model):
+    __tablename__ = 'issues'
+    id = db.Column(db.Integer(),primary_key=True)
+    user_id = db.Column('user_id', db.Integer(),
+                            db.ForeignKey('users.id'))
+    complaint = db.Column(db.String(1023))
 
 class BankDetails(db.Model):
     __tablename__ = 'bank_details'

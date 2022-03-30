@@ -1,7 +1,7 @@
 from flask import session, render_template, request, redirect, flash, json
 from app import app, models, db
 from flask_security import current_user, logout_user, auth_required, roles_required
-from .forms import CancelForm, StoreCardDetailsForm, CreateBookingForm, LocationForm, RegistrationForm
+from .forms import CancelForm, StoreCardDetailsForm, CreateBookingForm, LocationForm, RegistrationForm, IssueForm
 import datetime
 from .setup import user_datastore
 import smtplib, ssl
@@ -107,6 +107,24 @@ def my_account():
 
     return render_template_auth('my_account.html', title='My Account', user=user, card_details=details, active_bookings=active_bookings, previous_bookings=previous_bookings, form=form)
 
+@app.route('/reportissue', methods=['GET', 'POST'])
+@auth_required()
+def issue_details():
+    #for users to notify staff of any issues
+    issue_form = IssueForm()
+
+    if issue_form.validate_on_submit():
+        issue = models.Issue(
+        user_id = current_user.id,
+        complaint = issue_form.complaint.data)
+
+        db.session.add(issue)
+        db.session.commit()
+        db.session.flush()
+
+    u = models.User.query.get(current_user.id)
+
+    return render_template_auth('submit_issues.html', title='Issue Submission', issue=issue_form)
 
 @app.route('/account/bank_details', methods=['GET', 'POST'])
 @auth_required()
@@ -201,11 +219,29 @@ def hireScooter():
 
     details = models.BankDetails.query.filter_by(
         id=user.bank_details_id).first()
+<<<<<<< HEAD
+
+    accountNo = str(details.accountNo)[-4:] if details else None
+<<<<<<< HEAD
+=======
+
+    return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
+>>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
+
+=======
 
     accountNo = str(details.accountNo)[-4:] if details else None
 
+>>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
     return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
+<<<<<<< HEAD
+
+<<<<<<< HEAD
+=======
+>>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
+=======
+>>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
 @app.route('/performHire', methods=['GET'])
 def performHire():
     pickupLocationId = int(request.args.get('pickupLocationId'))
@@ -296,7 +332,7 @@ def manager():
     employeeRole = models.Role.query.filter_by(name='employee').first()
 
     employees = [u for u in models.User.query.all() if employeeRole in u.roles]
-    
+
 
     bar_labels = [row[1] for row in HIRE_CHOICES]
 
@@ -323,14 +359,14 @@ def managerAddEmployee():
             last_name=form.last_name.data,
             dob=form.dob.data,
             email=form.email.data,
-            password=form.password.data, 
+            password=form.password.data,
             roles=["employee"])
 
         db.session.commit()
         db.session.flush()
-        
+
         return redirect('/')
-    
+
     return render_template_auth('manager/add_employee.html', register_user_form=form)
 
 
