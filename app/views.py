@@ -4,6 +4,7 @@ from flask_security import current_user, logout_user, auth_required, roles_requi
 from .forms import CancelForm, StoreCardDetailsForm, CreateBookingForm, LocationForm, RegistrationForm
 import datetime
 from .setup import user_datastore
+import smtplib, ssl
 
 HIRE_CHOICES = [('1', '1 hr'), ('2', '4 hrs'), ('3', '1 day'), ('4', '1 week')]
 
@@ -205,7 +206,6 @@ def hireScooter():
 
     return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
-
 @app.route('/performHire', methods=['GET'])
 def performHire():
     pickupLocationId = int(request.args.get('pickupLocationId'))
@@ -235,6 +235,24 @@ def performHire():
     return '200'
 
 
+# @app.route('/emailBooking', methods=['GET'])
+def emailBooking():
+    smtp_server = 'smtp.gmail.com'
+    port = 465
+    sender = "scooterz.info@gmail.com"
+    password = "Sc0oterz123"
+    receiver = current_user.email
+    userName = current_user.first_name
+    print(receiver)
+    # customerEmail = receiver
+    message = "Subject: Scooterz Booking Confirmed!\nTo: " + receiver + "\nHi "+userName+", your scooter booking has been confirmed.\nKind Regards,\nScooterz team."
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender, password)
+        print('it worked')
+        server.sendmail(sender, receiver, message)
 
 
 @app.route('/confirmHire', methods=['GET'])
@@ -256,6 +274,7 @@ def confirmHire():
     bankDetails = models.BankDetails.query.filter_by(
         id=user.bank_details_id).first()
 
+    emailBooking()
 
     if bankDetails:
         accountNo = str(bankDetails.accountNo)[-4:]
