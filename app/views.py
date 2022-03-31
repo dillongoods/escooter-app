@@ -219,29 +219,11 @@ def hireScooter():
 
     details = models.BankDetails.query.filter_by(
         id=user.bank_details_id).first()
-<<<<<<< HEAD
-
-    accountNo = str(details.accountNo)[-4:] if details else None
-<<<<<<< HEAD
-=======
-
-    return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
->>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
-
-=======
 
     accountNo = str(details.accountNo)[-4:] if details else None
 
->>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
     return render_template_auth('hireScooter.html', scooter=scooter, location=location, allLocations=allLocations, durationOptions=HIRE_CHOICES, has_card_details=details is not None, details_form=details_form, accountNo=accountNo)
 
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-=======
->>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
-=======
->>>>>>> 84eacc57f5bc5cb1bb5f3ded64b69f0eb86e6748
 @app.route('/performHire', methods=['GET'])
 def performHire():
     pickupLocationId = int(request.args.get('pickupLocationId'))
@@ -279,15 +261,12 @@ def emailBooking():
     password = "Sc0oterz123"
     receiver = current_user.email
     userName = current_user.first_name
-    print(receiver)
-    # customerEmail = receiver
     message = "Subject: Scooterz Booking Confirmed!\nTo: " + receiver + "\nHi "+userName+", your scooter booking has been confirmed.\nKind Regards,\nScooterz team."
 
     context = ssl.create_default_context()
 
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
         server.login(sender, password)
-        print('it worked')
         server.sendmail(sender, receiver, message)
 
 
