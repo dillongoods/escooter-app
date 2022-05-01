@@ -1,12 +1,13 @@
 {% extends "base/index.html" %} {% block content %}
 
-<div class="w-[392px] mx-auto flex flex-col h-full justify-center">
-  <span class="text-h6">Add card details</span>
+<div class="w-[640px] mx-auto flex flex-col h-full justify-center">
+  <span class="text-h6">Describe your issue</span>
   <div class="drop-shadow-md bg-white rounded-xl mt-4 p-6">
-    <form action="" method="post" name="bankDetails">
+    <form action="" method="post" name="submitIssue">
       <div class="mb-3">
-        <label class="mb-2">List issue(s)</label> {{ issue.complaint(class_='mt-2
-        w-full p-3 rounded-lg border border-black', placeholder_="Type here") }}
+        <label class="mb-2">List issue(s)</label> {{ issue.complaint(class_='
+        px-3 py-4 placeholder-slate-300 text-slate-600
+        w-full rounded-lg border border-black', placeholder_="Type here") }}
         <div class="alert alert-danger w-100" role="alert"></div>
 
       <div class="w-full h-px bg-gray-200 my-8"></div>
