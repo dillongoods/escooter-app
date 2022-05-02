@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_security.models import fsqla_v2 as fsqla
+from flask_security.utils import hash_password
 import logging
 
 MANAGER_EMAIL = 'admin321@gmail.com'
@@ -34,5 +35,5 @@ def create_user():
         user_datastore.create_role(name="employee")
 
     if not user_datastore.find_user(email=MANAGER_EMAIL):
-        user_datastore.create_user(first_name='Admin', last_name='User', email=MANAGER_EMAIL, password="admin1234", roles=["manager"])
+        user_datastore.create_user(first_name='Admin', last_name='User', email=MANAGER_EMAIL, password=hash_password("admin1234"), roles=["manager"])
     db.session.commit()

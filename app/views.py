@@ -1,6 +1,7 @@
 from flask import session, render_template, request, redirect, flash, json
 from app import app, models, db
 from flask_security import current_user, logout_user, auth_required, roles_required
+from flask_security.utils import hash_password
 from .forms import CancelForm, StoreCardDetailsForm, CreateBookingForm, LocationForm, RegistrationForm, IssueForm
 import datetime
 from .setup import user_datastore
@@ -338,7 +339,7 @@ def managerAddEmployee():
             last_name=form.last_name.data,
             dob=form.dob.data,
             email=form.email.data,
-            password=form.password.data,
+            password=hash_password(form.password.data),
             roles=["employee"])
 
         db.session.commit()
