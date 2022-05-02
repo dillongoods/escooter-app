@@ -23,11 +23,14 @@ fsqla.FsModels.set_db_info(db, user_table_name="users", role_table_name="roles")
 
 from app import views, models, setup
 
-from .setup import user_datastore
+from .setup import user_datastore, add_locations, add_scooters
 
 @app.before_first_request
 def setup_admin():
     db.create_all()
+
+    # add_locations()
+    # add_scooters()
 
     if not user_datastore.find_role("manager"):
         user_datastore.create_role(name="manager")
@@ -37,4 +40,3 @@ def setup_admin():
         user_datastore.create_user(first_name='Admin', last_name='User', email=MANAGER_EMAIL, password=hash_password("admin1234"), roles=["manager"])
     db.session.commit()
 
-    
