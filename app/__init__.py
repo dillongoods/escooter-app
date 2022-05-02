@@ -25,9 +25,8 @@ from app import views, models, setup
 
 from .setup import user_datastore
 
-# Create a user to test with
 @app.before_first_request
-def create_user():
+def setup_admin():
     db.create_all()
 
     if not user_datastore.find_role("manager"):
@@ -37,3 +36,5 @@ def create_user():
     if not user_datastore.find_user(email=MANAGER_EMAIL):
         user_datastore.create_user(first_name='Admin', last_name='User', email=MANAGER_EMAIL, password=hash_password("admin1234"), roles=["manager"])
     db.session.commit()
+
+    
