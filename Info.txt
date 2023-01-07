@@ -1,0 +1,11 @@
+alright
+
+source /venv/bin/activate
+then its just, flask run
+
+todo:
+
+change it so that i have the google API from index.html to something from my account
+therefore i've got to make a google cloud account with billing enabled
+
+also, make sure that i dont do too many scooter bookings as i'll have to fiddle with the database, scooter locations, and add new scooters.
